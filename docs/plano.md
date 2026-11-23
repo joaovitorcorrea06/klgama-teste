@@ -15,7 +15,7 @@ Construir uma entrega funcional e consistente dentro de 72 horas, com prioridade
 | 7. Acabamento | Responsividade, teclado, mensagens e revisão de todas as telas | Fluxos revisados em 390, 768 e 1440 px, sem sobreposição; gráficos e tabelas legíveis; carregamento, erro e vazio conferidos |
 | 8. Entrega | CI, README, ambiente limpo e revisão final | Instalação reproduzida do zero; lint, tipos, build e testes passam; commits legíveis; repositório público verificado; checklist final preenchido |
 
-As partes 1 e 2 estão concluídas, e a parte 3 está implementada com validação técnica concluída. Cadastro, login, JWT e sessão passaram por testes de configuração, lógica do front-end e integração HTTP com PostgreSQL, além do fluxo pelo Nginx do Compose. A revisão visual e de interação no navegador continua pendente. Clientes, coletas e indicadores ainda serão implementados.
+As partes 1, 2 e 3 estão concluídas. Cadastro, login, JWT e sessão passaram por testes de configuração, lógica do front-end e integração HTTP com PostgreSQL, além do fluxo pelo Nginx do Compose. Login e cadastro foram revisados no Chrome em celular, tablet e desktop; o fluxo completo, a restauração após recarregar e a proteção após logout também foram conferidos no navegador. Clientes, coletas e indicadores ainda serão implementados.
 
 ## Distribuição do prazo
 
@@ -39,7 +39,7 @@ Se houver atraso, retirar diferenciais de menor prioridade antes de reduzir os o
 
 ### Interface
 
-- [x] Login e retorno ao login quando a sessão não for válida; lógica coberta por testes, interação visual pendente.
+- [x] Login e retorno ao login quando a sessão não for válida, com testes de lógica e conferência no Chrome.
 - [ ] Listas e formulários de clientes e coletas.
 - [ ] Filtros e paginação utilizando a API.
 - [ ] Ações de realizar, cancelar e registrar CDF.

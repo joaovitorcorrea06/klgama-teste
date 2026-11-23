@@ -24,11 +24,11 @@
 .auth-form { display: grid; gap: 22px; }
 .form-field { display: grid; gap: 8px; }
 .form-field label { font-size: 0.875rem; font-weight: 500; }
-.form-field input { width: 100%; height: 48px; border: 1px solid #c9cbd0; background: white; color: var(--color-ink); border-radius: 8px; padding: 12px 14px; transition: border-color 150ms; min-width: 0; }
-.form-field input:hover { border-color: #9296a1; }
+.form-field input { width: 100%; height: 48px; border: 1px solid #8b8f99; background: white; color: var(--color-ink); border-radius: 8px; padding: 12px 14px; transition: border-color 150ms; min-width: 0; }
+.form-field input:hover { border-color: #606473; }
 .form-field input:focus-visible { border-color: var(--color-brand-action); outline: 3px solid rgb(183 71 13 / 15%); outline-offset: 0; }
 .form-field input[aria-invalid='true'] { border-color: var(--color-danger); }
-.form-field input::placeholder { color: #85878d; }
+.form-field input::placeholder { color: var(--color-muted); }
 .password-input { position: relative; }
 .password-input input { padding-right: 52px; }
 .password-toggle { display: grid; place-items: center; position: absolute; top: 2px; right: 2px; width: 44px; height: 44px; padding: 0; color: #606473; background: transparent; border: 0; border-radius: 6px; cursor: pointer; }
@@ -53,7 +53,7 @@
 @media (prefers-reduced-motion: reduce) { .spin { animation: none; } }
 .connection-state { min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 32px; }
 .connection-state > svg { color: var(--color-brand-action); }
-.connection-state p { max-width: 440px; color: var(--color-muted); margin: 0 0 24px; }
+.connection-state p { max-width: 440px; color: var(--color-muted-on-page); margin: 0 0 24px; }
 .portal-header { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 24px 40px; background: white; border-bottom: 1px solid var(--color-border); }
 .brand-link { text-decoration: none; }
 .portal-user { display: flex; align-items: center; gap: 24px; min-width: 0; }
@@ -65,6 +65,7 @@
 .portal-navigation a { display: inline-flex; align-items: center; gap: 8px; min-height: 52px; border-bottom: 2px solid var(--color-brand); text-decoration: none; color: var(--color-brand-action); font-size: 0.875rem; font-weight: 500; }
 .portal-content { max-width: 1280px; min-height: calc(100svh - 220px); margin: auto; padding: 48px 40px; }
 .portal-content h1 { font-size: 2rem; margin: 0 0 12px; letter-spacing: -0.025em; }
+.portal-content .form-description { color: var(--color-muted-on-page); }
 .portal-content .eyebrow { margin-bottom: 12px; }
 .portal-welcome { background: white; border: 1px solid var(--color-border); border-radius: 16px; padding: 48px; box-shadow: var(--shadow-card); }
 .welcome-symbol { display: inline-grid; place-items: center; background: #fff2e9; color: var(--color-brand-action); border-radius: 16px; width: 64px; height: 64px; }

@@ -21,7 +21,7 @@ h1, h2, h3 { line-height: 1.15; text-wrap: balance; }
 .welcome-note { max-width: 540px; padding: 24px; border-radius: var(--radius-card); border: 1px solid var(--color-border); background: var(--color-surface); box-shadow: var(--shadow-card); }
 .note-label { color: var(--color-brand-action); font-size: 0.875rem; font-weight: 700; }
 .welcome-note p { margin: 8px 0 0; font-size: 0.875rem; }
-.site-footer { max-width: 1280px; margin: auto; padding: 24px 48px; color: var(--color-muted); font-size: 0.75rem; }
+.site-footer { max-width: 1280px; margin: auto; padding: 24px 48px; color: var(--color-muted-on-page); font-size: 0.75rem; }
 .button-primary { display: inline-flex; min-height: 44px; align-items: center; padding: 12px 20px; background: var(--color-brand-action); color: white; text-decoration: none; border-radius: var(--radius-control); font-weight: 500; }
 .numeric { font-variant-numeric: tabular-nums; }
 @media (max-width: 600px) {
