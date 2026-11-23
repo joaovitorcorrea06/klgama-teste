@@ -8,6 +8,9 @@ export const router = createRouter({
     { path: '/login', name: 'login', component: () => import('../pages/LoginPage.vue'), meta: { title: 'Entrar', guestOnly: true } },
     { path: '/cadastro', name: 'cadastro', component: () => import('../pages/CadastroPage.vue'), meta: { title: 'Criar conta', guestOnly: true } },
     { path: '/painel', name: 'painel', component: () => import('../pages/PainelPage.vue'), meta: { title: 'Painel', requiresAuth: true } },
+    { path: '/clientes', name: 'clientes', component: () => import('../pages/ClientesPage.vue'), meta: { title: 'Clientes', requiresAuth: true } },
+    { path: '/clientes/novo', name: 'novo-cliente', component: () => import('../pages/ClienteFormPage.vue'), meta: { title: 'Novo cliente', requiresAuth: true } },
+    { path: '/clientes/:id/editar', name: 'editar-cliente', component: () => import('../pages/ClienteFormPage.vue'), meta: { title: 'Editar cliente', requiresAuth: true } },
     { path: '/:pathMatch(.*)*', name: 'nao-encontrada', component: () => import('../pages/NaoEncontradaPage.vue'), meta: { title: 'Página não encontrada' } },
   ],
   scrollBehavior: () => ({ top: 0 }),
@@ -20,6 +23,7 @@ router.beforeEach(async (to) => {
   if (to.meta.guestOnly && session.usuario) return { name: 'painel' };
 });
 
-router.afterEach((to) => {
+router.afterEach((to, _from, failure) => {
+  if (failure) return;
   document.title = `${String(to.meta.title ?? 'Portal de Coletas')} · EcoColeta`;
 });

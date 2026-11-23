@@ -5,6 +5,7 @@ import '@fontsource/roboto/latin-700.css';
 import './styles/tokens.css';
 import './styles/global.css';
 import './styles/auth.css';
+import './styles/clientes.css';
 import App from './App.vue';
 import { router } from './router';
 

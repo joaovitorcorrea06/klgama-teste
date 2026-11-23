@@ -1,6 +1,6 @@
 # Contrato planejado da API
 
-Contrato para orientar a implementação e a integração. As rotas de autenticação estão implementadas; clientes, coletas e painel permanecem planejados. Manter os mesmos nomes no front-end, nos DTOs e no Swagger.
+Contrato para orientar a implementação e a integração. Autenticação e clientes estão implementados; coletas e painel permanecem planejados. Manter os mesmos nomes no front-end, nos DTOs e no Swagger.
 
 ## Convenções
 
@@ -54,6 +54,10 @@ Login aceita 10 tentativas/minuto/IP e cadastro, 5. Ao exceder, retorna 429 com 
 
 Nome, CNPJ, cidade e UF obrigatórios. UF validada contra a lista de unidades federativas. Vinculação de uma coleta a cliente inexistente retorna 404; a cliente inativo, 400.
 
+As respostas de listagem e detalhe de cliente incluem `possuiColetas`, booleano calculado no banco. Campos públicos do cliente: `id`, `nome`, `cnpj`, `cidade`, `uf`, `ativo`, `criadoEm`. Datas de criação em ISO 8601 UTC. Cadastro e atualização devolvem os campos públicos; a listagem seguinte atualiza a indicação de vínculo.
+
+`busca` tem até 150 caracteres e procura trechos em nome, cidade e CNPJ sem distinguir maiúsculas e minúsculas. Pontuação do CNPJ é normalizada para a busca. Curingas de SQL são escapados e todos os valores são parametrizados. `ativo` na query aceita somente `true` ou `false`; no corpo exige booleano JSON. Um PATCH vazio ou com campos nulos retorna 400. CNPJ duplicado retorna 409; exclusão com coletas também retorna 409. Detalhe, atualização e exclusão de ID inexistente retornam 404.
+
 ## Coletas
 
 | Método e rota | Comportamento |
@@ -75,7 +79,7 @@ Filtros combináveis: `clienteId`, `status`, `tipoResiduo`, `inicio`, `fim` e `s
 
 ### Paginação
 
-Todas as listas usam `pagina` a partir de 1, padrão 1, e `limite` de 1 a 100, padrão 20. Resposta: `itens` e `meta` com `pagina`, `limite`, `total` e `totalPaginas`. Em lista vazia, total e total de páginas são zero.
+Todas as listas usam `pagina` a partir de 1, padrão 1, e `limite` de 1 a 100, padrão 20. Clientes aceitam até a página 100000. Resposta: `itens` e `meta` com `pagina`, `limite`, `total` e `totalPaginas`. Em lista vazia, total e total de páginas são zero. Uma página além do resultado devolve itens vazios, preservando a contagem real dos filtros.
 
 Ordenação estável: clientes por nome e ID; coletas por data agendada decrescente e ID. Filtros são aplicados antes da contagem e da paginação.
 

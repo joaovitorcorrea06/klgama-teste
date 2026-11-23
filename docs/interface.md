@@ -78,3 +78,7 @@ Estas melhorias são intenções de implementação; o README final indicará qu
 ## Revisão das telas de acesso
 
 Login e cadastro conferidos no Chrome em 390/393 px, 768 px e 1440 px. O formulário de cadastro permite rolar até as ações e o rodapé em telas estreitas. Foram conferidos estados de erro, foco no campo inválido, confirmação de senha, cadastro bem-sucedido, login, restauração e logout. Placeholders têm contraste mínimo de 4,5:1 sobre branco; bordas dos campos superam 3:1. A revisão das demais telas será feita após suas implementações.
+
+## Revisão da gestão de clientes
+
+Listagem revisada no Chrome em desktop e 768 px, incluindo busca vazia, limpeza de filtros, situação, identificação de histórico e restrição de exclusão. Cadastro e edição conferidos com validação, máscara de CNPJ, foco no erro, salvamento e cancelamento de navegação mantendo os dados. A revisão móvel está pendente após indisponibilidade do controle da janela do navegador. A tabela mantém colunas legíveis em uma região com rolagem horizontal; filtros e ações se reorganizam em larguras estreitas.
