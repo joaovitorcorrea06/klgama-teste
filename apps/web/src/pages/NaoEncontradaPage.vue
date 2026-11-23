@@ -1,5 +1,9 @@
 <template>
-  <section class="welcome">
+  <main
+    id="conteudo"
+    class="welcome"
+    tabindex="-1"
+  >
     <p class="eyebrow">
       Página não encontrada
     </p>
@@ -11,5 +15,5 @@
       class="button-primary"
       to="/"
     >Voltar ao início</RouterLink>
-  </section>
+  </main>
 </template>

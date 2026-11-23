@@ -1,10 +1,10 @@
 # Contrato planejado da API
 
-Contrato para orientar a implementação e a integração. As rotas ainda não estão disponíveis. Manter os mesmos nomes no front-end, nos DTOs e no Swagger.
+Contrato para orientar a implementação e a integração. As rotas de autenticação estão implementadas; clientes, coletas e painel permanecem planejados. Manter os mesmos nomes no front-end, nos DTOs e no Swagger.
 
 ## Convenções
 
-- JSON em UTF-8. Todas as rotas abaixo, exceto cadastro e login, exigem `Authorization: Bearer <token>`.
+- JSON em UTF-8. Todas as rotas abaixo, exceto cadastro e login, exigem JWT via `Authorization: Bearer <token>` ou cookie HttpOnly de sessão do portal.
 - IDs UUID; datas civis `YYYY-MM-DD`; decimais como strings com ponto, sem símbolo ou separador de milhar.
 - Cadastro retorna dados públicos do usuário. Login retorna token, tipo `Bearer`, duração em segundos e usuário público. Nunca devolver senha ou hash.
 - Rejeitar campos desconhecidos e conversões ambíguas. Parâmetros de paginação são inteiros; booleanos aceitam apenas `true` e `false`.
@@ -17,6 +17,7 @@ Contrato para orientar a implementação e a integração. As rotas ainda não e
 | 204 | Exclusão concluída sem corpo |
 | 400 | Formato, campo, período ou regra de negócio inválida |
 | 401 | Token ausente, expirado ou inválido; credenciais incorretas |
+| 403 | Origem inválida para uma operação de alteração usando cookie |
 | 404 | Recurso solicitado ou relacionado inexistente |
 | 409 | E-mail, CNPJ ou MTR duplicado; conflito de estado ou exclusão impedida por vínculo |
 
@@ -28,9 +29,18 @@ Falhas de validação em uma transição retornam 400. Quando a coleta já mudou
 | --- | --- | --- |
 | `POST /auth/cadastro` | `nome`, `email`, `senha` | 201, usuário público |
 | `POST /auth/login` | `email`, `senha` | 200, sessão JWT |
-| `GET /auth/me` | Token | 200, usuário público atual |
+| `GET /auth/me` | JWT | 200, `{ usuario, expiraEm }` |
+| `POST /auth/logout` | JWT; `Origin` correto se usar cookie | 204, remove cookie |
 
-Usar hash bcrypt ou argon2, expiração explícita do JWT, segredo via ambiente e limite de tentativas no login. Detalhes do armazenamento da sessão no navegador serão definidos na etapa de autenticação, junto das proteções correspondentes.
+Login retorna `{ accessToken, tokenType: "Bearer", expiresIn, usuario }` e define cookie `ecocoleta_session` HttpOnly, SameSite=Strict e Path=/. `expiresIn` está em segundos; `expiraEm` é ISO 8601 UTC. Cadastro devolve usuário público, sem iniciar sessão. Usuário público tem `id`, `nome`, `email` e `criadoEm`.
+
+Senha: bcrypt custo 12, mínimo de 10 caracteres no cadastro e máximo de 72 bytes UTF-8. E-mail aparado e convertido para minúsculas; nome tem espaços excedentes normalizados. Campos desconhecidos retornam 400, com `errors` contendo mensagens por campo.
+
+JWT: HS256, issuer `ecocoleta-api`, audience `ecocoleta-portal`, sujeito UUID de usuário existente e expiração explícita. O navegador não armazena token em Web Storage. A sessão é restaurada por `/auth/me`. Logout apaga cookie; não revoga JWT já copiado por um cliente REST.
+
+No acesso por cookie, mutações exigem `Origin` exatamente igual a `WEB_ORIGIN`; clientes REST podem usar Bearer sem cookie. Login e cadastro rejeitam origem explicitamente diferente. A API deve ser consumida pelo proxy `/api` no navegador. Cookie Secure é obrigatório com origem HTTPS.
+
+Login aceita 10 tentativas/minuto/IP e cadastro, 5. Ao exceder, retorna 429 com `Retry-After`. O armazenamento do limitador é em memória e reinicia com o processo; uma instalação com múltiplas réplicas precisará de armazenamento compartilhado.
 
 ## Clientes
 

@@ -1,29 +1,39 @@
+<script setup lang="ts">
+import { watch } from 'vue';
+import { useRouter } from 'vue-router';
+import { session } from './composables/useSession';
+import SessionUnavailable from './components/SessionUnavailable.vue';
+import { LoaderCircle } from '@lucide/vue';
+
+const router = useRouter();
+watch(() => session.status, (status, previous) => {
+  if (status === 'anonymous' && previous === 'authenticated' && router.currentRoute.value.meta.requiresAuth) {
+    void router.replace({ name: 'login', query: { motivo: 'sessao', redirecionar: router.currentRoute.value.fullPath } });
+  }
+});
+</script>
+
 <template>
   <a
     class="skip-link"
     href="#conteudo"
   >Ir para o conteúdo</a>
-  <header class="site-header">
-    <RouterLink
-      class="brand"
-      to="/"
-      aria-label="EcoColeta, início"
-    >
-      <span
-        class="brand-mark"
-        aria-hidden="true"
-      >e<span>.</span></span>
-      <span>EcoColeta<small>Gestão ambiental</small></span>
-    </RouterLink>
-    <span class="header-context">Portal de Coletas</span>
-  </header>
   <main
+    v-if="session.status === 'unknown'"
     id="conteudo"
+    class="connection-state"
     tabindex="-1"
+    aria-busy="true"
   >
-    <RouterView />
+    <LoaderCircle
+      class="spin"
+      :size="30"
+      aria-hidden="true"
+    />
+    <p role="status">
+      Verificando seu acesso…
+    </p>
   </main>
-  <footer class="site-footer">
-    EcoColeta · Empresa fictícia para demonstração
-  </footer>
+  <SessionUnavailable v-else-if="session.status === 'unavailable'" />
+  <RouterView v-else />
 </template>

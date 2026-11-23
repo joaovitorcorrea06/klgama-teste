@@ -8,6 +8,8 @@ export interface Environment {
   nodeEnv: 'development' | 'test' | 'production';
   apiPort: number;
   webOrigin: string;
+  trustProxy: boolean;
+  auth: { secret: string; expiresIn: number; cookieSecure: boolean };
   database: {
     host: string;
     port: number;
@@ -46,11 +48,25 @@ export function readEnvironment(source: NodeJS.ProcessEnv = process.env): Enviro
 
   const ssl = source.DB_SSL ?? 'false';
   if (ssl !== 'true' && ssl !== 'false') throw new Error('DB_SSL deve ser true ou false.');
+  const secret = required('JWT_SECRET');
+  if (Buffer.byteLength(secret, 'utf8') < 32 || secret.startsWith('replace-')) {
+    throw new Error('JWT_SECRET deve ser um segredo aleatório com pelo menos 32 bytes.');
+  }
+  const duration = /^(\d+)(s|m|h)$/.exec(source.JWT_EXPIRES_IN ?? '1h');
+  const expiresIn = duration ? Number(duration[1]) * ({ s: 1, m: 60, h: 3600 }[duration[2]] ?? 0) : 0;
+  if (expiresIn < 60 || expiresIn > 86400) throw new Error('JWT_EXPIRES_IN deve ser de 60 segundos a 24 horas, usando s, m ou h.');
+  const cookieSecure = source.COOKIE_SECURE ?? 'false';
+  const trustProxy = source.API_TRUST_PROXY ?? 'false';
+  if (!['true', 'false'].includes(cookieSecure)) throw new Error('COOKIE_SECURE deve ser true ou false.');
+  if (!['true', 'false'].includes(trustProxy)) throw new Error('API_TRUST_PROXY deve ser true ou false.');
+  if (origin.protocol === 'https:' && cookieSecure !== 'true') throw new Error('COOKIE_SECURE deve ser true quando WEB_ORIGIN usa HTTPS.');
 
   return {
     nodeEnv,
     apiPort: port('API_PORT', '3000'),
     webOrigin,
+    trustProxy: trustProxy === 'true',
+    auth: { secret, expiresIn, cookieSecure: cookieSecure === 'true' },
     database: {
       host: required('DB_HOST'),
       port: port('DB_PORT', '5432'),

@@ -45,6 +45,12 @@ As exigências do desafio e as interpretações adotadas aparecem separadas abai
 - Cliente inativo continua visível no histórico; impedir novas vinculações a ele não invalida coletas preexistentes.
 - Todos os usuários pertencem à mesma operação fictícia. Não haverá acesso por perfis ou segregação de dados por usuário na primeira versão.
 
+### Autenticação implementada
+
+O portal usa JWT em cookie HttpOnly e SameSite=Strict, com validade padrão de uma hora e restauração pelo endpoint de sessão. Bearer também é aceito para clientes REST. Somente cadastro e login são públicos. Alterações autenticadas por cookie exigem a origem configurada, e HTTPS exige cookie Secure. Logout remove o cookie, sem revogar antecipadamente tokens copiados por clientes REST.
+
+Senhas têm pelo menos 10 caracteres e até 72 bytes UTF-8, sem transformação do conteúdo, e são armazenadas com bcrypt custo 12. Respostas não incluem senha nem hash. O limitador de tentativas é por IP e mantém contagem em memória em uma única instância da API.
+
 ## Semântica dos indicadores
 
 O enunciado não define a data de referência de cada indicador nem quando um MTR passa a contar como emitido. A interpretação adotada é que o MTR informado na criação já representa um documento emitido. Canceladas são excluídas dos indicadores; continuam consultáveis na gestão de coletas.

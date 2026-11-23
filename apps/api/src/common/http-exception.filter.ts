@@ -24,6 +24,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       const body = exception.getResponse();
       if (typeof body === 'string') message = body;
       else if ('message' in body) {
+        if ('errors' in body) errors = body.errors;
         if (Array.isArray(body.message)) {
           message = 'Confira os dados informados.';
           errors = body.message;

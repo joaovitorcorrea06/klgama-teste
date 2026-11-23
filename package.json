@@ -12,11 +12,12 @@
     "npm": ">=10"
   },
   "scripts": {
+    "setup": "node scripts/setup.mjs",
     "dev": "concurrently -k -n api,web -c cyan,yellow \"npm run dev -w @ecocoleta/api\" \"npm run dev -w @ecocoleta/web\"",
     "build": "npm run build --workspaces",
     "typecheck": "npm run typecheck --workspaces",
     "lint": "eslint . --max-warnings=0",
-    "test": "npm run test -w @ecocoleta/api",
+    "test": "npm run test --workspaces",
     "test:db": "npm run test:db -w @ecocoleta/api",
     "check": "npm run lint && npm run typecheck && npm test && npm run build",
     "db:up": "docker compose up -d --wait db",
