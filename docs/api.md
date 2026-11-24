@@ -46,7 +46,7 @@ Login aceita 10 tentativas/minuto/IP e cadastro, 5. Ao exceder, retorna 429 com 
 
 | Método e rota | Comportamento |
 | --- | --- |
-| `GET /clientes` | Lista paginada; filtros `busca` e `ativo` |
+| `GET /clientes` | Lista paginada; filtros `busca`, `nome`, `cnpj`, `cidade` e `ativo` |
 | `POST /clientes` | Cria com `nome`, `cnpj`, `cidade`, `uf` e `ativo` opcional, padrão true |
 | `GET /clientes/:id` | Detalhe |
 | `PATCH /clientes/:id` | Atualiza os campos permitidos; `ativo` permite inativar e reativar |
@@ -56,7 +56,7 @@ Nome, CNPJ, cidade e UF obrigatórios. UF validada contra a lista de unidades fe
 
 As respostas de listagem e detalhe de cliente incluem `possuiColetas`, booleano calculado no banco. Campos públicos do cliente: `id`, `nome`, `cnpj`, `cidade`, `uf`, `ativo`, `criadoEm`. Datas de criação em ISO 8601 UTC. Cadastro e atualização devolvem os campos públicos; a listagem seguinte atualiza a indicação de vínculo.
 
-`busca` tem até 150 caracteres e procura trechos em nome, cidade e CNPJ sem distinguir maiúsculas e minúsculas. Pontuação do CNPJ é normalizada para a busca. Curingas de SQL são escapados e todos os valores são parametrizados. `ativo` na query aceita somente `true` ou `false`; no corpo exige booleano JSON. Um PATCH vazio ou com campos nulos retorna 400. CNPJ duplicado retorna 409; exclusão com coletas também retorna 409. Detalhe, atualização e exclusão de ID inexistente retornam 404.
+`busca` tem até 150 caracteres e procura trechos em nome, cidade e CNPJ sem distinguir maiúsculas e minúsculas. Pontuação do CNPJ é normalizada para a busca. Curingas de SQL são escapados e todos os valores são parametrizados. Os campos específicos `nome` (até 160 caracteres), `cidade` (até 120) e `cnpj` (trecho de 1 a 14 dígitos, com pontuação opcional) podem ser combinados: todos os filtros preenchidos precisam corresponder ao mesmo cliente. Nome e cidade usam trechos literais sem distinguir maiúsculas/minúsculas. A paginação e os totais consideram o conjunto filtrado no banco. `ativo` na query aceita somente `true` ou `false`; no corpo exige booleano JSON. Um PATCH vazio ou com campos nulos retorna 400. CNPJ duplicado retorna 409; exclusão com coletas também retorna 409. Detalhe, atualização e exclusão de ID inexistente retornam 404.
 
 ## Coletas
 

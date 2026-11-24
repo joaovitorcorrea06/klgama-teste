@@ -43,6 +43,24 @@ export class ListarClientesDto {
   @MaxLength(150, { message: 'Use até 150 caracteres na busca.' })
   @ApiPropertyOptional({ type: String, maxLength: 150, description: 'Trecho literal de nome, cidade ou CNPJ.' }) busca?: string;
 
+  @Transform(trimText)
+  @ValidateIf(optional)
+  @IsString({ message: 'O nome deve ser um texto.' })
+  @MaxLength(160, { message: 'Use até 160 caracteres no filtro de nome.' })
+  @ApiPropertyOptional({ type: String, maxLength: 160, description: 'Trecho literal do nome; combinado com os demais filtros.' }) nome?: string;
+
+  @Transform(({ value }: { value: unknown }) => typeof value === 'string' ? value.replace(/[.\s/-]/g, '') : value)
+  @ValidateIf(optional)
+  @IsString({ message: 'O CNPJ deve ser um texto.' })
+  @Matches(/^\d{1,14}$/, { message: 'Informe de 1 a 14 dígitos no filtro de CNPJ.' })
+  @ApiPropertyOptional({ type: String, example: '00.000.000/0000-01', description: 'Trecho de 1 a 14 dígitos do CNPJ; aceita pontuação.' }) cnpj?: string;
+
+  @Transform(trimText)
+  @ValidateIf(optional)
+  @IsString({ message: 'A cidade deve ser um texto.' })
+  @MaxLength(120, { message: 'Use até 120 caracteres no filtro de cidade.' })
+  @ApiPropertyOptional({ type: String, maxLength: 120, description: 'Trecho literal da cidade; combinado com os demais filtros.' }) cidade?: string;
+
   @Transform(({ value }: { value: unknown }) => value === 'true' ? true : value === 'false' ? false : value)
   @ValidateIf(optional)
   @IsBoolean({ message: 'O filtro ativo deve ser true ou false.' })

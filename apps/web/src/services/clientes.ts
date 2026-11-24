@@ -5,7 +5,7 @@ export interface Cliente {
   ativo: boolean; criadoEm: string; possuiColetas?: boolean;
 }
 export interface ClienteInput { nome: string; cnpj: string; cidade: string; uf: string; ativo: boolean }
-export interface ClientesQuery { busca: string; ativo: '' | 'true' | 'false'; pagina: number; limite: number }
+export interface ClientesQuery { nome?: string; cnpj?: string; cidade?: string; busca: string; ativo: '' | 'true' | 'false'; pagina: number; limite: number }
 export interface ClientesResult { itens: Cliente[]; meta: { pagina: number; limite: number; total: number; totalPaginas: number } }
 export const ufs = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO'];
 
@@ -32,7 +32,7 @@ export function clientesRouteQuery(query: ClientesQuery): Record<string, string>
 
 export const clientesApi = {
   listar(query: ClientesQuery, signal?: AbortSignal) {
-    const parameters = new URLSearchParams({ pagina: String(query.pagina), limite: String(query.limite), ...(query.busca ? { busca: query.busca } : {}), ...(query.ativo ? { ativo: query.ativo } : {}) });
+    const parameters = new URLSearchParams({ pagina: String(query.pagina), limite: String(query.limite), ...(query.busca ? { busca: query.busca } : {}), ...(query.ativo ? { ativo: query.ativo } : {}), ...(query.nome?.trim() ? { nome: query.nome.trim() } : {}), ...(query.cnpj?.trim() ? { cnpj: query.cnpj.trim() } : {}), ...(query.cidade?.trim() ? { cidade: query.cidade.trim() } : {}) });
     return apiRequest<ClientesResult>(`/clientes?${parameters}`, { signal });
   },
   buscar: (id: string) => apiRequest<Cliente>(`/clientes/${encodeURIComponent(id)}`),

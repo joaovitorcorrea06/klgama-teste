@@ -20,7 +20,7 @@ test('gestão de clientes com API e PostgreSQL', async (context) => withTestAppl
     for (const body of [{ ...input, cnpj: 'abc' }, { ...input, ativo: 'false' }, { ...input, uf: 'XX' }, { ...input, nome: null }, { ...input, ativo: null }, { ...input, id: randomUUID() }]) assert.equal((await request('', 'POST', body)).status, 400);
     assert.equal((await request('/id-invalido')).status, 400);
     assert.equal((await request(`/${randomUUID()}`)).status, 404);
-    for (const query of ['pagina=0', 'limite=101', 'ativo=0', 'ativo=', 'pagina=1.5', 'busca=a&busca=b', 'desconhecido=1']) assert.equal((await request(`?${query}`)).status, 400);
+    for (const query of ['pagina=0', 'limite=101', 'ativo=0', 'ativo=', 'pagina=1.5', 'busca=a&busca=b', 'desconhecido=1', 'nome=a&nome=b', 'cidade=a&cidade=b', 'cnpj=abc', 'cnpj=123456789012345', 'cnpj=', `nome=${'a'.repeat(161)}`, `cidade=${'a'.repeat(121)}`]) assert.equal((await request(`?${query}`)).status, 400);
   });
 
   await context.test('cria normalizado e aplica ativo por padrão', async () => {
@@ -60,6 +60,13 @@ test('gestão de clientes com API e PostgreSQL', async (context) => withTestAppl
     const outside = await (await request('?pagina=99&limite=2')).json() as ListResult;
     assert.equal(outside.meta.total, 3);
     assert.equal(outside.itens.length, 0);
+    const combined = await (await request('?nome=horizonte&cnpj=00.000.000%2F0000-01&cidade=cidade&ativo=true&limite=1')).json() as ListResult;
+    assert.equal(combined.meta.total, 1);
+    assert.equal(combined.itens[0].id, cliente.id);
+    for (const query of ['nome=Cidade', 'cidade=Horizonte', 'nome=Horizonte&cnpj=02', 'nome=Horizonte&cidade=Outra']) {
+      assert.equal((await (await request(`?${query}`)).json() as ListResult).meta.total, 0, query);
+    }
+    assert.equal((await (await request('?cnpj=01')).json() as ListResult).itens[0].id, cliente.id);
   });
 
   await context.test('edição parcial preserva os demais campos e rejeita nulos', async () => {
@@ -99,7 +106,7 @@ test('gestão de clientes com API e PostgreSQL', async (context) => withTestAppl
 
   await context.test('busca trata curingas SQL como texto literal', async () => {
     assert.equal((await (await request('?busca=%25')).json() as ListResult).meta.total, 0);
-    await request('', 'POST', { ...input, nome: 'Cliente % Fictício', cnpj: '00000000000004' });
-    assert.equal((await (await request('?busca=%25')).json() as ListResult).meta.total, 1);
+    await request('', 'POST', { ...input, nome: 'Cliente % Fictício', cidade: 'Cidade % Fictícia', cnpj: '00000000000004' });
+    for (const field of ['busca', 'nome', 'cidade']) assert.equal((await (await request(`?${field}=%25`)).json() as ListResult).meta.total, 1);
   });
 }));

@@ -21,14 +21,17 @@ export class ClientesService {
   async listar(dto: ListarClientesDto) {
     const query = this.repository.createQueryBuilder('cliente');
     if (dto.ativo !== undefined) query.andWhere('cliente.ativo = :ativo', { ativo: dto.ativo });
+    const escape = (value: string) => value.replace(/[\\%_]/g, '\\$&');
     if (dto.busca) {
-      const escape = (value: string) => value.replace(/[\\%_]/g, '\\$&');
       const busca = `%${escape(dto.busca)}%`;
       const digits = dto.busca.replace(/[.\s/-]/g, '');
       query.andWhere(new Brackets((where) => where.where('cliente.nome ILIKE :busca', { busca })
         .orWhere('cliente.cidade ILIKE :busca')
         .orWhere('cliente.cnpj ILIKE :cnpj', { cnpj: `%${escape(digits)}%` })));
     }
+    if (dto.nome) query.andWhere('cliente.nome ILIKE :nome', { nome: `%${escape(dto.nome)}%` });
+    if (dto.cnpj) query.andWhere('cliente.cnpj LIKE :filtroCnpj', { filtroCnpj: `%${dto.cnpj}%` });
+    if (dto.cidade) query.andWhere('cliente.cidade ILIKE :cidade', { cidade: `%${escape(dto.cidade)}%` });
     const total = await query.getCount();
     const { entities, raw } = await query.addSelect('EXISTS (SELECT 1 FROM coletas c WHERE c.cliente_id = cliente.id)', 'possuiColetas')
       .orderBy('cliente.nome', 'ASC').addOrderBy('cliente.id', 'ASC')

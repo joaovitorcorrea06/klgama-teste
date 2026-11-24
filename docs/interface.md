@@ -81,6 +81,10 @@ Login e cadastro conferidos no Chrome em 390/393 px, 768 px e 1440 px. O formul�
 
 ## Revisão da gestão de clientes
 
+A seleção de cliente nos filtros e no formulário de coleta usa um modal com nome, CNPJ, cidade/UF e situação. Nome, CNPJ e cidade têm filtros separados e combináveis pela API, com páginas de 10, 20 ou 50 itens. A consulta histórica inclui inativos; novos vínculos oferecem somente ativos. Selecionar preenche o campo com os dados do cliente; cancelar ou pressionar Escape preserva a seleção anterior e devolve o foco ao acionador.
+
+O catálogo foi conferido com 25 clientes fictícios: três páginas, seleção na segunda página, combinação de filtros, resultado vazio, CNPJ inválido, falha com nova tentativa e gravação da coleta vinculada ao cliente selecionado. Em 390 px, as linhas se organizam como cartões; em 768 e 1440 px, como tabela, com cabeçalho e paginação sempre disponíveis no modal.
+
 Listagem revisada no Chrome em desktop e 768 px, incluindo busca vazia, limpeza de filtros, situação, identificação de histórico e restrição de exclusão. Cadastro e edição conferidos com validação, máscara de CNPJ, foco no erro, salvamento e cancelamento de navegação mantendo os dados. A revisão móvel foi retomada e concluída na etapa 7. A tabela mantém colunas legíveis em uma região com rolagem horizontal; filtros e ações se reorganizam em larguras estreitas.
 
 ## Revisão de coletas e painel

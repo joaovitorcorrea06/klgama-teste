@@ -78,7 +78,7 @@ As premissas temporais estão explícitas no README: MTR pela data agendada, fin
 | Fluxo | Resultado observado |
 | --- | --- |
 | Acesso | Cadastro fictício, senha incorreta com mensagem, login correto, recarga, logout e tentativa de voltar à rota privada |
-| Clientes | Obrigatórios, máscara, criação, edição, busca, inativação, exclusão sem vínculo e lista vazia; exclusão com vínculo indisponível |
+| Clientes | Obrigatórios, máscara, criação, edição, busca, inativação, exclusão sem vínculo e lista vazia; exclusão com vínculo indisponível. Catálogo em modal validado com 25 clientes, três páginas e filtros separados de nome/CNPJ/cidade |
 | Coletas | Obrigatórios, exclusão do cliente inativo nas opções, cadastro com valores brasileiros, edição, realização, CDF, cancelamento e exclusão de agendamento |
 | Filtros | Cliente, status, resíduo, datas e documento combinados; duas linhas correspondentes ao conjunto conhecido; segunda página e retorno |
 | Painel | Período sem movimento, atenção inalterada, selo oculto quando não há MTR sem CDF, alternância das três métricas |
