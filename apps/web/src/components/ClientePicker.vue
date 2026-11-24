@@ -97,7 +97,7 @@ onBeforeUnmount(() => { selectionRevision++; close(); });
 
 <template>
   <div class="client-picker form-field">
-    <label :for="`${id}-trigger`">Cliente {{ activeOnly ? '(obrigatório)' : '(filtro)' }}</label>
+    <label :for="`${id}-trigger`">Cliente{{ activeOnly ? ' (obrigatório)' : '' }}</label>
     <div class="client-selector-field">
       <button
         :id="`${id}-trigger`"
@@ -111,6 +111,7 @@ onBeforeUnmount(() => { selectionRevision++; close(); });
         :aria-controls="`${id}-dialog`"
         :aria-expanded="opened"
         :aria-label="selected ? `Alterar cliente: ${selected.nome}` : 'Selecionar cliente'"
+        :title="selected ? `${selected.nome} · ${formatCnpj(selected.cnpj)} · ${selected.cidade}/${selected.uf}` : 'Buscar cliente por nome, CNPJ ou cidade'"
         @click="open"
       >
         <Building2

@@ -149,11 +149,11 @@ onBeforeUnmount(() => { revision++; controller?.abort(); });
           aria-label="Filtrar coletas"
           @submit.prevent="applyFilters"
         >
-          <ClientePicker
-            v-model="filters.clienteId"
-            :active-only="false"
-          />
           <div class="collection-filter-fields">
+            <ClientePicker
+              v-model="filters.clienteId"
+              :active-only="false"
+            />
             <div class="form-field">
               <label for="status">Situação</label><div class="select-wrap">
                 <select
@@ -195,24 +195,23 @@ onBeforeUnmount(() => { revision++; controller?.abort(); });
               </div>
             </div>
             <ResiduoField v-model="filters.tipoResiduo" />
-            <div class="date-range">
-              <div class="form-field">
-                <label for="inicio">Agendada a partir de</label><input
-                  id="inicio"
-                  v-model="filters.inicio"
-                  type="date"
-                  min="1000-01-01"
-                  max="9999-12-31"
-                />
-              </div><div class="form-field">
-                <label for="fim">Agendada até</label><input
-                  id="fim"
-                  v-model="filters.fim"
-                  type="date"
-                  min="1000-01-01"
-                  max="9999-12-31"
-                />
-              </div>
+            <div class="form-field">
+              <label for="inicio">Agendada a partir de</label><input
+                id="inicio"
+                v-model="filters.inicio"
+                type="date"
+                min="1000-01-01"
+                max="9999-12-31"
+              />
+            </div>
+            <div class="form-field">
+              <label for="fim">Agendada até</label><input
+                id="fim"
+                v-model="filters.fim"
+                type="date"
+                min="1000-01-01"
+                max="9999-12-31"
+              />
             </div>
           </div>
           <p
