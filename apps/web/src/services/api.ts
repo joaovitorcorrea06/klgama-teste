@@ -16,7 +16,7 @@ export async function apiRequest<T>(path: string, options: RequestInit = {}, not
       ...options,
       credentials: 'same-origin',
       headers: { ...(options.body ? { 'Content-Type': 'application/json' } : {}), ...options.headers },
-      signal: options.signal ?? AbortSignal.timeout(15000),
+      signal: options.signal ? AbortSignal.any([options.signal, AbortSignal.timeout(15000)]) : AbortSignal.timeout(15000),
     });
   } catch {
     throw new ApiError(0, 'Não foi possível conectar ao portal. Confira sua conexão e tente novamente.');

@@ -47,7 +47,9 @@ test('gestão de coletas com API e PostgreSQL', async (context) => withTestAppli
     assert.equal(defaults.valorDespesa, '0.00');
   });
   await context.test('unicidade de MTR também sob concorrência', async () => {
-    assert.equal((await request('', 'POST', { ...input, numeroMtr: 'mtr-001' })).status, 409);
+    const duplicate = await request('', 'POST', { ...input, numeroMtr: 'mtr-001' });
+    assert.equal(duplicate.status, 409);
+    assert.ok((await duplicate.json() as { errors: { numeroMtr: string[] } }).errors.numeroMtr.length > 0);
     const responses = await Promise.all([request('', 'POST', { ...input, numeroMtr: 'MTR-RACE' }), request('', 'POST', { ...input, numeroMtr: 'mtr-race' })]);
     assert.deepEqual(responses.map((r) => r.status).sort(), [201, 409]);
   });

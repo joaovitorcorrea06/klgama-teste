@@ -78,7 +78,7 @@ async function submit(): Promise<void> {
     error.value = failure instanceof Error ? failure.message : 'Não foi possível salvar a coleta.';
     if (failure instanceof ApiError) {
       for (const [field, messages] of Object.entries(failure.errors)) errors[field] = messages[0];
-      if (failure.status === 409 && !final.value) error.value += ' Se a situação mudou, recarregue a página antes de editar.';
+      if (failure.status === 409 && !final.value && !failure.errors.numeroMtr) error.value += ' Se a situação mudou, recarregue a página antes de editar.';
     }
     await nextTick(); feedbackElement.value?.focus();
   } finally { submitting.value = false; }
@@ -200,6 +200,8 @@ onBeforeUnmount(() => { revision++; window.removeEventListener('beforeunload', b
                   :id="field.key"
                   v-model="data[field.key]"
                   :name="field.key"
+                  autocomplete="off"
+                  :spellcheck="false"
                   :type="field.type"
                   :inputmode="field.decimal ? 'decimal' : undefined"
                   :maxlength="field.max"

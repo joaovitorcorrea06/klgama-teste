@@ -82,7 +82,7 @@
 .button-danger { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 12px 20px; border: 0; border-radius: var(--radius-control); background: var(--color-danger); color: white; font-weight: 500; cursor: pointer; }
 .button-danger:hover { background: #a31f1f; }
 .button-danger:disabled { opacity: 0.65; cursor: wait; }
-.confirm-dialog { border: 1px solid var(--color-border); padding: 28px; max-width: min(460px, calc(100vw - 40px)); border-radius: 16px; box-shadow: 0 16px 64px rgb(0 0 0 / 20%); color: var(--color-ink); }
+.confirm-dialog { border: 1px solid var(--color-border); padding: 28px; max-width: min(460px, calc(100vw - 40px)); max-height: calc(100dvh - 40px); overflow: auto; overscroll-behavior: contain; overflow-wrap: anywhere; border-radius: 16px; box-shadow: 0 16px 64px rgb(0 0 0 / 20%); color: var(--color-ink); }
 .confirm-dialog::backdrop { background: rgb(23 28 42 / 48%); backdrop-filter: blur(3px); }
 .confirm-dialog h2 { font-size: 1.25rem; margin: 0 0 14px; }
 .confirm-dialog > p { font-size: 0.875rem; color: #606473; line-height: 1.6; margin: 0 0 24px; }
@@ -103,7 +103,7 @@ body:has(dialog[open]) { overflow: hidden; }
   .card-heading, .list-filters { padding-left: 20px; padding-right: 20px; }
   .card-heading > .count-badge { margin-left: 56px; }
   .filter-search { flex-basis: 100%; }
-  .list-filters > .form-field:not(.filter-search) { flex: 1; width: auto; }
+  .list-filters > .form-field:not(.filter-search) { flex: 1 0 100%; width: 100%; }
   .list-status { padding-left: 20px; padding-right: 20px; }
   .client-form-grid { padding: 4px 20px 24px; grid-template-columns: minmax(0, 1fr); }
   .client-status-setting { padding: 20px; }

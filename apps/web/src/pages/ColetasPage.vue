@@ -21,6 +21,7 @@ const filterError = ref('');
 const action = ref<{ coleta: Coleta; kind: 'realizar' | 'cancelar' | 'cdf' | 'excluir' }>();
 const actionLoading = ref(false);
 const actionError = ref('');
+const actionValidation = reactive<Record<string, string>>({});
 const actionFields = reactive({ pesoKg: '', dataRealizada: '', dataCdf: '' });
 const actionForm = ref<HTMLFormElement>();
 let controller: AbortController | undefined;
@@ -57,6 +58,7 @@ function applyFilters(): void {
 }
 function openAction(coleta: Coleta, kind: NonNullable<typeof action.value>['kind']): void {
   actionError.value = '';
+  Object.keys(actionValidation).forEach(key => delete actionValidation[key]);
   Object.assign(actionFields, { pesoKg: '', dataRealizada: '', dataCdf: coleta.dataCdf ?? '' });
   action.value = { coleta, kind };
 }
@@ -64,10 +66,12 @@ async function confirmAction(): Promise<void> {
   if (!action.value || actionLoading.value) return;
   const { coleta, kind } = action.value;
   actionError.value = '';
+  Object.keys(actionValidation).forEach(key => delete actionValidation[key]);
   const weight = decimalInput(actionFields.pesoKg, 3, 11, true);
-  if (kind === 'realizar' && (!weight || !validDate(actionFields.dataRealizada))) actionError.value = 'Informe peso maior que zero (até 3 casas decimais) e uma data válida.';
-  if (kind === 'cdf' && (!validDate(actionFields.dataCdf) || actionFields.dataCdf < coleta.dataRealizada!)) actionError.value = `Informe uma data válida a partir de ${formatDate(coleta.dataRealizada)}.`;
-  if (actionError.value) { await nextTick(); actionForm.value?.querySelector<HTMLElement>('input')?.focus(); return; }
+  if (kind === 'realizar' && !weight) actionValidation.pesoKg = 'Informe peso maior que zero, com até 3 casas decimais.';
+  if (kind === 'realizar' && !validDate(actionFields.dataRealizada)) actionValidation.dataRealizada = 'Informe uma data de realização válida.';
+  if (kind === 'cdf' && (!validDate(actionFields.dataCdf) || actionFields.dataCdf < coleta.dataRealizada!)) actionValidation.dataCdf = `Informe uma data válida a partir de ${formatDate(coleta.dataRealizada)}.`;
+  if (Object.keys(actionValidation).length) { await nextTick(); actionForm.value?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus(); return; }
   actionLoading.value = true;
   try {
     if (kind === 'realizar') await coletasApi.realizar(coleta.id, { pesoKg: weight!, dataRealizada: actionFields.dataRealizada });
@@ -80,6 +84,7 @@ async function confirmAction(): Promise<void> {
     else await load();
   } catch (failure) {
     actionError.value = failure instanceof Error ? failure.message : 'Não foi possível concluir a ação.';
+    if (failure instanceof ApiError) for (const [field, messages] of Object.entries(failure.errors)) actionValidation[field] = messages[0];
     if (failure instanceof ApiError && [404, 409].includes(failure.status)) await load();
   } finally { actionLoading.value = false; }
 }
@@ -307,6 +312,9 @@ onBeforeUnmount(() => { revision++; controller?.abort(); });
         aria-label="Tabela de coletas, role horizontalmente para ver todas as colunas"
         tabindex="0"
       >
+        <p class="table-scroll-hint">
+          Deslize a tabela para os lados ou use as setas do teclado para consultar as outras colunas.
+        </p>
         <table class="clients-table collections-table">
           <caption class="sr-only">
             Coletas encontradas na consulta
@@ -507,22 +515,39 @@ onBeforeUnmount(() => { revision++; controller?.abort(); });
               <label for="peso">Peso destinado (kg)</label><input
                 id="peso"
                 v-model="actionFields.pesoKg"
+                name="pesoKg"
+                autocomplete="off"
                 inputmode="decimal"
                 placeholder="Ex.: 1250,500"
                 maxlength="16"
                 required
-              /><p class="field-hint">
-                Maior que zero, com até 3 casas decimais.
+                :aria-invalid="!!actionValidation.pesoKg"
+                aria-describedby="peso-hint"
+              /><p
+                id="peso-hint"
+                :class="actionValidation.pesoKg ? 'field-error' : 'field-hint'"
+              >
+                {{ actionValidation.pesoKg || 'Maior que zero, com até 3 casas decimais.' }}
               </p>
             </div><div class="form-field">
               <label for="realizada">Data de realização</label><input
                 id="realizada"
                 v-model="actionFields.dataRealizada"
+                name="dataRealizada"
                 type="date"
                 min="1000-01-01"
                 max="9999-12-31"
                 required
+                :aria-invalid="!!actionValidation.dataRealizada"
+                :aria-describedby="actionValidation.dataRealizada ? 'realizada-error' : undefined"
               />
+              <p
+                v-if="actionValidation.dataRealizada"
+                id="realizada-error"
+                class="field-error"
+              >
+                {{ actionValidation.dataRealizada }}
+              </p>
             </div>
           </template>
           <div
@@ -532,12 +557,18 @@ onBeforeUnmount(() => { revision++; controller?.abort(); });
             <label for="data-cdf">Data do CDF</label><input
               id="data-cdf"
               v-model="actionFields.dataCdf"
+              name="dataCdf"
               type="date"
               :min="action.coleta.dataRealizada!"
               max="9999-12-31"
               required
-            /><p class="field-hint">
-              Realizada em {{ formatDate(action.coleta.dataRealizada) }}.
+              :aria-invalid="!!actionValidation.dataCdf"
+              aria-describedby="data-cdf-hint"
+            /><p
+              id="data-cdf-hint"
+              :class="actionValidation.dataCdf ? 'field-error' : 'field-hint'"
+            >
+              {{ actionValidation.dataCdf || `Realizada em ${formatDate(action.coleta.dataRealizada)}.` }}
             </p>
           </div>
           <button

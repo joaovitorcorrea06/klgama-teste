@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue';
+import { computed, nextTick, onBeforeUnmount, reactive, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ArrowRight, CalendarDays, CheckCircle2, CircleAlert, FileCheck2, Files, Info, LoaderCircle, Plus, TrendingUp } from '@lucide/vue';
 import PortalLayout from '../components/PortalLayout.vue';
@@ -41,9 +41,9 @@ function navigate(next: PainelQuery): void {
 }
 function apply(): void {
   filterError.value = '';
-  if (!validMonth(filters.inicio) || !validMonth(filters.fim)) { filterError.value = 'Informe os meses inicial e final.'; return; }
+  if (!validMonth(filters.inicio) || !validMonth(filters.fim)) { filterError.value = 'Informe os meses inicial e final.'; void nextTick(() => document.getElementById(!validMonth(filters.inicio) ? 'mes-inicio' : 'mes-fim')?.focus()); return; }
   const count = monthIndex(filters.fim) - monthIndex(filters.inicio) + 1;
-  if (count < 1 || count > 60) { filterError.value = 'Selecione de 1 a 60 meses, com início anterior ou igual ao fim.'; return; }
+  if (count < 1 || count > 60) { filterError.value = 'Selecione de 1 a 60 meses, com início anterior ou igual ao fim.'; void nextTick(() => document.getElementById('mes-inicio')?.focus()); return; }
   navigate({ ...filters });
 }
 function changeMetric(value: string): void { void router.push({ name: 'painel', query: { ...route.query, metrica: value !== 'toneladas' ? value : undefined } }); }

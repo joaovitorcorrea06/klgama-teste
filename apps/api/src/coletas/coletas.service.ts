@@ -18,7 +18,7 @@ export class ColetasService {
 
   private rethrow(error: unknown): never {
     if (error instanceof QueryFailedError && error.driverError.code === '23505' && error.driverError.constraint === 'coletas_numero_mtr_key') {
-      throw new ConflictException('Este número de MTR já está cadastrado.');
+      throw new ConflictException({ message: 'Este número de MTR já está cadastrado.', errors: { numeroMtr: ['Este número de MTR já está cadastrado.'] } });
     }
     throw error;
   }

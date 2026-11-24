@@ -77,12 +77,37 @@ As três melhorias estão implementadas no painel; evidências e limitações da
 
 ## Revisão das telas de acesso
 
-Login e cadastro conferidos no Chrome em 390/393 px, 768 px e 1440 px. O formulário de cadastro permite rolar até as ações e o rodapé em telas estreitas. Foram conferidos estados de erro, foco no campo inválido, confirmação de senha, cadastro bem-sucedido, login, restauração e logout. Placeholders têm contraste mínimo de 4,5:1 sobre branco; bordas dos campos superam 3:1. A revisão das demais telas será feita após suas implementações.
+Login e cadastro conferidos no Chrome em 390/393 px, 768 px e 1440 px. O formulário de cadastro permite rolar até as ações e o rodapé em telas estreitas. Foram conferidos estados de erro, foco no campo inválido, confirmação de senha, cadastro bem-sucedido, login, restauração e logout. Placeholders têm contraste mínimo de 4,5:1 sobre branco; bordas dos campos superam 3:1. As demais telas foram revisadas na etapa 7.
 
 ## Revisão da gestão de clientes
 
-Listagem revisada no Chrome em desktop e 768 px, incluindo busca vazia, limpeza de filtros, situação, identificação de histórico e restrição de exclusão. Cadastro e edição conferidos com validação, máscara de CNPJ, foco no erro, salvamento e cancelamento de navegação mantendo os dados. A revisão móvel está pendente após indisponibilidade do controle da janela do navegador. A tabela mantém colunas legíveis em uma região com rolagem horizontal; filtros e ações se reorganizam em larguras estreitas.
+Listagem revisada no Chrome em desktop e 768 px, incluindo busca vazia, limpeza de filtros, situação, identificação de histórico e restrição de exclusão. Cadastro e edição conferidos com validação, máscara de CNPJ, foco no erro, salvamento e cancelamento de navegação mantendo os dados. A revisão móvel foi retomada e concluída na etapa 7. A tabela mantém colunas legíveis em uma região com rolagem horizontal; filtros e ações se reorganizam em larguras estreitas.
 
 ## Revisão de coletas e painel
 
-Coletas conferidas no Chrome em desktop: listagem por situação, novo agendamento com cliente, peso/data obrigatórios na realização, mudança de situação e registro de CDF. Painel inspecionado em desktop com dados fictícios: quatro cartões, financeiro com valores compactos acima das barras, atenção atual, rastreabilidade empilhada, ranking, evolução e alternativa tabular. Troca de métrica mantém a posição da página. Revisão consolidada em 390/768/1440 px, teclado e estados de erro/vazio permanece na parte 7. Controles nativos de mês/data seguem a localização do navegador/sistema; rótulos e contexto do portal são em português.
+Coletas conferidas no Chrome em desktop: listagem por situação, novo agendamento com cliente, peso/data obrigatórios na realização, mudança de situação e registro de CDF. Painel inspecionado em desktop com dados fictícios: quatro cartões, financeiro com valores compactos acima das barras, atenção atual, rastreabilidade empilhada, ranking, evolução e alternativa tabular. Troca de métrica mantém a posição da página. Revisão consolidada em 390/768/1440 px, teclado e estados de erro/vazio concluída na parte 7. Controles nativos de mês/data seguem a localização do navegador/sistema; rótulos e contexto do portal são em português.
+
+## Revisão consolidada — 24/11/2026
+
+Conferência manual no Chrome, por controles de emulação, em 390, 768 e 1440 px. Revisão de código orientada pelas [Web Interface Guidelines](https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md). Sem sobreposição observada nos estados inspecionados; sem alegação de certificação de acessibilidade ou compatibilidade com navegadores não testados.
+
+| Área | Evidência observada |
+| --- | --- |
+| Painel em 390 px | Cabeçalho, filtro, gráficos agrupados/empilhados, composição e evolução legíveis; troca de toneladas para receita sem salto de rolagem |
+| Painel em 768/1440 px | Cartões em duas/quatro colunas, períodos alinhados, totais completos e gráfico financeiro sem sobreposição |
+| Clientes em 390 px | Formulário em coluna única; envio vazio por teclado anuncia erros e foca nome; busca inexistente retorna vazio; seletor corrigido permanece legível com “Limpar filtros” |
+| Coletas em 390/768/1440 px | Formulário em uma/duas colunas e guia lateral em desktop; campos de data/valores legíveis; filtros abrem pelo teclado |
+| Diálogo de realização | Revisto em 390/1440 px com erro de peso e data; foco inicial em cancelar, erro no primeiro campo inválido, Escape devolve foco à ação original |
+| Recuperação | API interrompida e reiniciada no Compose; tela própria de indisponibilidade, “Tentar novamente” recupera sessão e painel sem novo login |
+
+### Achados corrigidos
+
+- `apps/web/src/styles/clientes.css:106` — seletor de situação estreito com ação de limpeza no celular; agora ocupa uma linha.
+- `apps/web/src/styles/clientes.css:85` — diálogos preparados para texto sem espaços e altura limitada, com rolagem contida.
+- `apps/web/src/pages/ColetasPage.vue:71` — realização/CDF apresentam erro associado ao campo e foco no primeiro inválido.
+- `apps/web/src/router/index.ts:34` — navegação entre páginas move o foco para o conteúdo sem afetar a troca de métrica.
+- `apps/web/src/styles/global.css:28` — tabelas estreitas orientam a rolagem local por toque ou teclado.
+- `apps/web/src/services/api.ts:19` — cancelamento de consultas preserva também o limite de 15 segundos de espera.
+- `apps/api/src/coletas/coletas.service.ts:21` — MTR duplicado identifica o campo na resposta 409; mensagens de validação de coletas em português.
+
+Os testes anteriores de cadastro, edição, realização e CDF continuam documentados nas etapas dos respectivos módulos. Esta rodada não alterou os registros fictícios existentes. Testes automatizados finais: lint sem avisos, tipos, 4 testes de configuração, 14 de lógica do front-end, 40 verificações PostgreSQL e build aprovados. API saudável e front-end respondendo após a simulação.

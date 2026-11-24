@@ -238,6 +238,9 @@ onBeforeUnmount(() => { revision++; controller?.abort(); });
           tabindex="0"
           :aria-busy="loading"
         >
+          <p class="table-scroll-hint">
+            Deslize a tabela para os lados ou use as setas do teclado para consultar as outras colunas.
+          </p>
           <table class="clients-table">
             <caption class="sr-only">
               Clientes ordenados por nome, com CNPJ, localização, situação e ações.

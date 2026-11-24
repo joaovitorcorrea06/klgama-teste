@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import { nextTick } from 'vue';
 import { ensureSession, session } from '../composables/useSession';
 
 export const router = createRouter({
@@ -30,7 +31,10 @@ router.beforeEach(async (to) => {
   if (to.meta.guestOnly && session.usuario) return { name: 'painel' };
 });
 
-router.afterEach((to, _from, failure) => {
+router.afterEach((to, from, failure) => {
   if (failure) return;
   document.title = `${String(to.meta.title ?? 'Portal de Coletas')} · EcoColeta`;
+  if (to.path !== from.path) void nextTick(() => {
+    if (router.currentRoute.value.fullPath === to.fullPath) document.getElementById('conteudo')?.focus({ preventScroll: true });
+  });
 });

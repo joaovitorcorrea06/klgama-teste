@@ -48,6 +48,8 @@ onBeforeUnmount(() => { revision++; selectionRevision++; clearTimeout(timer); co
     <input
       :id="`${id}-search`"
       v-model="busca"
+      :name="`${id}-busca-cliente`"
+      autocomplete="off"
       type="search"
       placeholder="Nome, CNPJ ou cidade"
       maxlength="150"
@@ -62,6 +64,7 @@ onBeforeUnmount(() => { revision++; selectionRevision++; clearTimeout(timer); co
       <select
         :id="`${id}-select`"
         :value="modelValue"
+        :name="`${id}-cliente`"
         :disabled="disabled"
         :aria-invalid="!!error"
         :aria-describedby="`${id}-hint ${error ? `${id}-error` : ''}`"

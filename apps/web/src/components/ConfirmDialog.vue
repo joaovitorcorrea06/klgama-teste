@@ -26,7 +26,7 @@ onBeforeUnmount(() => dialog.value?.close());
     ref="dialog"
     class="confirm-dialog"
     :aria-labelledby="`${id}-title`"
-    :aria-describedby="`${id}-description`"
+    :aria-describedby="`${id}-description${error ? ` ${id}-error` : ''}`"
     :aria-busy="loading"
     @cancel.prevent="!loading && emit('cancel')"
   >
@@ -39,6 +39,7 @@ onBeforeUnmount(() => dialog.value?.close());
     <slot />
     <p
       v-if="error"
+      :id="`${id}-error`"
       class="feedback feedback-error"
       role="alert"
     >

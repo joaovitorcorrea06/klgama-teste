@@ -25,6 +25,8 @@ onBeforeUnmount(() => { revision++; clearTimeout(timer); controller?.abort(); })
     <input
       :id="id"
       :value="modelValue"
+      :name="`${id}-residuo`"
+      autocomplete="off"
       :list="`${id}-options`"
       maxlength="160"
       placeholder="Ex.: Papel reciclável"

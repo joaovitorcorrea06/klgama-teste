@@ -91,6 +91,7 @@ async function submit(): Promise<void> {
           v-model="data.email"
           :disabled="submitting"
           type="email"
+          :spellcheck="false"
           name="email"
           autocomplete="username"
           inputmode="email"

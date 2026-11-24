@@ -24,6 +24,11 @@ h1, h2, h3 { line-height: 1.15; text-wrap: balance; }
 .site-footer { max-width: 1280px; margin: auto; padding: 24px 48px; color: var(--color-muted-on-page); font-size: 0.75rem; }
 .button-primary { display: inline-flex; min-height: 44px; align-items: center; padding: 12px 20px; background: var(--color-brand-action); color: white; text-decoration: none; border-radius: var(--radius-control); font-weight: 500; }
 .numeric { font-variant-numeric: tabular-nums; }
+.feedback, .page-description, .list-status { overflow-wrap: anywhere; }
+.table-scroll-hint { display: none; }
+@media (max-width: 1100px) {
+  .table-scroll-hint { display: block; margin: 0; padding: 12px 20px; color: #606473; background: #fafafa; font-size: 0.8125rem; border-top: 1px solid var(--color-border); }
+}
 @media (max-width: 600px) {
   .site-header { padding: 24px; }
   .header-context { display: none; }
