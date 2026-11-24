@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { HttpExceptionFilter } from '../common/http-exception.filter';
 import { readEnvironment } from './environment';
+import { configureDocumentation } from '../documentation/configure-documentation';
 
 function fieldErrors(errors: ValidationError[], prefix = ''): Record<string, string[]> {
   const result: Record<string, string[]> = {};
@@ -27,5 +28,6 @@ export function configureApp(app: INestApplication): void {
     exceptionFactory: (errors) => new BadRequestException({ message: 'Confira os dados informados.', errors: fieldErrors(errors) }),
   }));
   app.useGlobalFilters(new HttpExceptionFilter());
+  configureDocumentation(app);
   app.enableShutdownHooks();
 }

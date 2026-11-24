@@ -1,0 +1,91 @@
+name: Verificação do projeto
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verificacao-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Qualidade e integração PostgreSQL
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: ecocoleta_ci
+          POSTGRES_PASSWORD: ci_only_disposable
+          POSTGRES_DB: ecocoleta_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ecocoleta_ci -d ecocoleta_ci"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      NODE_ENV: test
+      DB_HOST: 127.0.0.1
+      DB_PORT: 5432
+      DB_USER: ecocoleta_ci
+      DB_PASSWORD: ci_only_disposable
+      DB_NAME: ecocoleta_ci
+      DB_SSL: 'false'
+      WEB_ORIGIN: http://localhost:5173
+      JWT_SECRET: ci-only-disposable-secret-with-more-than-32-bytes
+      SWAGGER_ENABLED: 'false'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Instalar árvore fixada
+        run: npm ci
+      - name: Lint, tipos, testes e build
+        run: npm run check
+      - name: Aplicar migrations em banco vazio
+        run: npm run db:migrate
+      - name: Verificar banco e migrations
+        run: npm run db:check
+      - name: Testar regras, autenticação, painel e Swagger
+        run: npm run test:db
+
+  compose:
+    name: Build e inicialização do Compose
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Gerar configuração descartável
+        run: npm run setup
+      - name: Construir e iniciar serviços
+        run: docker compose -p ecocoleta-ci up -d --build --wait
+      - name: Conferir HTML e proteção pelo proxy
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          const html = await fetch('http://localhost:5173', { signal: AbortSignal.timeout(10000) });
+          assert.equal(html.status, 200);
+          assert.match(await html.text(), /EcoColeta/);
+          const session = await fetch('http://localhost:5173/api/auth/me', { signal: AbortSignal.timeout(10000) });
+          assert.equal(session.status, 401);
+          assert.equal((await session.json()).code, 'NAO_AUTENTICADO');
+          NODE
+      - name: Encerrar ambiente descartável
+        if: always()
+        run: docker compose -p ecocoleta-ci down -v --remove-orphans

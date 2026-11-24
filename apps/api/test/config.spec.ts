@@ -33,3 +33,11 @@ test('recusa segredo de exemplo, expiração inválida e cookie inseguro em HTTP
   assert.throws(() => readEnvironment({ ...valid, WEB_ORIGIN: 'https://example.com' }));
   assert.equal(readEnvironment({ ...valid, JWT_EXPIRES_IN: '30m' }).auth.expiresIn, 1800);
 });
+
+test('Swagger é opcional e exige credenciais próprias ao habilitar', () => {
+  assert.equal(readEnvironment(valid).swagger.enabled, false);
+  assert.throws(() => readEnvironment({ ...valid, SWAGGER_ENABLED: 'yes' }));
+  assert.throws(() => readEnvironment({ ...valid, SWAGGER_ENABLED: 'true' }));
+  assert.throws(() => readEnvironment({ ...valid, SWAGGER_ENABLED: 'true', SWAGGER_USER: 'avaliacao', SWAGGER_PASSWORD: 'replace-documentation-secret' }));
+  assert.equal(readEnvironment({ ...valid, SWAGGER_ENABLED: 'true', SWAGGER_USER: 'avaliacao', SWAGGER_PASSWORD: 'fixture-documentation-password' }).swagger.enabled, true);
+});

@@ -15,7 +15,7 @@ Construir uma entrega funcional e consistente dentro de 72 horas, com prioridade
 | 7. Acabamento | Responsividade, teclado, mensagens e revisão de todas as telas | Fluxos revisados em 390, 768 e 1440 px, sem sobreposição; gráficos e tabelas legíveis; carregamento, erro e vazio conferidos |
 | 8. Entrega | CI, README, ambiente limpo e revisão final | Instalação reproduzida do zero; lint, tipos, build e testes passam; commits legíveis; repositório público verificado; checklist final preenchido |
 
-As partes 1 a 7 estão implementadas e validadas dentro do escopo descrito no README. Autenticação, clientes, coletas e painel têm testes de integração com PostgreSQL real; a suíte passou com 40 verificações, incluindo agrupadores. Conferência manual no Chrome em 390, 768 e 1440 px cobriu responsividade, teclado, erros por campo, estado vazio e recuperação após indisponibilidade da API. Nenhum registro de demonstração foi alterado na revisão. A etapa 8 concentra Swagger, CI, reprodução em ambiente limpo e revisão do repositório/documentação para entrega.
+As oito partes estão implementadas. A validação local inclui lint, tipos, build, 5 testes de configuração, 14 testes do front-end e 45 verificações de integração com PostgreSQL real, incluindo agrupadores. A instalação foi reproduzida em pasta e volume novos; o fluxo HTTP completo e o Swagger protegido foram conferidos pelo proxy. A revisão no Chrome cobriu 390, 768 e 1440 px, teclado, erros, estado vazio e recuperação da API. O repositório público está em [joaovitorcorrea06/klgama-teste](https://github.com/joaovitorcorrea06/klgama-teste); o resultado atualizado da CI fica na aba Actions.
 
 ## Distribuição do prazo
 
@@ -53,10 +53,10 @@ Se houver atraso, retirar diferenciais de menor prioridade antes de reduzir os o
 ### Entrega
 
 - [x] Dados inteiramente fictícios.
-- [ ] Repositório público com histórico de commits por entrega concluída.
-- [ ] README com instalação, configuração e execução verificadas em pasta limpa.
-- [ ] README com decisões, requisitos entregues e tempo aproximado dedicado.
-- [ ] Nenhuma senha real, token, `.env` ou arquivo de CDF real versionado.
+- [x] Repositório público com histórico de commits por entrega concluída.
+- [x] README com instalação, configuração e execução verificadas em pasta limpa.
+- [x] README com decisões, requisitos entregues e estimativa de esforço para um pleno, identificada como estimativa.
+- [x] Nenhuma senha real, token, `.env` ou arquivo de CDF real versionado.
 - [ ] Resposta ao e-mail com o link do repositório feita pelo candidato dentro do prazo.
 
 ## Verificações prioritárias

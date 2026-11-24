@@ -110,4 +110,6 @@ Datas de referência e fórmulas seguem [Regras e decisões de negócio](regras.
 
 ## Documentação e infraestrutura
 
-Swagger é um diferencial priorizado. Como o enunciado exige proteção fora de cadastro e login, a documentação será protegida por autenticação separada e habilitada explicitamente por configuração. Ela não cria uma rota de negócio anônima. Variáveis, portas e procedimentos serão documentados na etapa de base técnica.
+Swagger está implementado em `/docs`, com contrato JSON em `/docs/openapi.json`. Pelo proxy web, use `/api/docs`. Os 19 endpoints documentam entradas, respostas, autenticação e erros. A interface, os recursos estáticos e o contrato exigem autenticação Basic independente; ela não autoriza as rotas de negócio, que continuam protegidas por JWT.
+
+A documentação fica desabilitada por padrão. Para habilitar, configure `SWAGGER_ENABLED=true` e execute `npm run setup`: uma senha aleatória é gerada em `SWAGGER_PASSWORD` quando necessário. O usuário está em `SWAGGER_USER`. Reinicie/recrie a API após alterar a configuração. Consulte o [README](../README.md) para o procedimento completo. Credenciais reais não são versionadas.

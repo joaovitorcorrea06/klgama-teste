@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsEmail, IsString, MaxLength, MinLength, ValidateBy } from 'class-validator';
 
@@ -7,7 +8,7 @@ class EmailDto {
   @Transform(normalizeEmail)
   @IsEmail({}, { message: 'Informe um e-mail válido.' })
   @MaxLength(254, { message: 'O e-mail deve ter até 254 caracteres.' })
-  email!: string;
+  @ApiProperty({ type: String, format: 'email', maxLength: 254, example: 'pessoa@example.test' }) email!: string;
 }
 
 function Senha(minimum: number): PropertyDecorator {
@@ -22,7 +23,7 @@ function Senha(minimum: number): PropertyDecorator {
 
 export class LoginDto extends EmailDto {
   @Senha(1)
-  senha!: string;
+  @ApiProperty({ type: String, minLength: 1, maxLength: 72, writeOnly: true, description: 'Limite de 72 bytes UTF-8. Cadastro exige pelo menos 10 caracteres.' }) senha!: string;
 }
 
 export class CadastroDto extends EmailDto {
@@ -30,8 +31,8 @@ export class CadastroDto extends EmailDto {
   @IsString({ message: 'Informe seu nome.' })
   @MinLength(2, { message: 'O nome deve ter pelo menos 2 caracteres.' })
   @MaxLength(120, { message: 'O nome deve ter até 120 caracteres.' })
-  nome!: string;
+  @ApiProperty({ type: String, minLength: 2, maxLength: 120, example: 'Pessoa Fictícia' }) nome!: string;
 
   @Senha(10)
-  senha!: string;
+  @ApiProperty({ type: String, minLength: 10, maxLength: 72, writeOnly: true, description: 'Limite de 72 bytes UTF-8. Cadastro exige pelo menos 10 caracteres.' }) senha!: string;
 }
