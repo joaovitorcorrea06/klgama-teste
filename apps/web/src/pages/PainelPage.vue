@@ -26,7 +26,7 @@ const firstName = computed(() => session.usuario?.nome.split(' ')[0] || '');
       <h2 id="operacao-titulo">
         Sua operação começa pelos clientes.
       </h2>
-      <p>Organize sua base de clientes e mantenha os dados atualizados. Coletas e indicadores estarão disponíveis em breve.</p>
+      <p>Organize sua base de clientes e mantenha os dados atualizados. A gestão de coletas já está disponível no menu. O painel de indicadores será integrado na próxima etapa.</p>
       <RouterLink
         class="button-primary"
         to="/clientes"

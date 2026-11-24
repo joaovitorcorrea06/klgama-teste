@@ -36,6 +36,7 @@ onBeforeUnmount(() => dialog.value?.close());
     <p :id="`${id}-description`">
       {{ description }}
     </p>
+    <slot />
     <p
       v-if="error"
       class="feedback feedback-error"

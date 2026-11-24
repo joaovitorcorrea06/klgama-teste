@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { CheckCircle2, LayoutDashboard, LogOut, UsersRound, X } from '@lucide/vue';
+import { CheckCircle2, LayoutDashboard, LogOut, Truck, UsersRound, X } from '@lucide/vue';
 import BrandMark from './BrandMark.vue';
 import { logout, session } from '../composables/useSession';
 import { clearFeedback, feedback } from '../composables/useFeedback';
@@ -60,6 +60,13 @@ async function sair(): Promise<void> {
         :size="18"
         aria-hidden="true"
       />Clientes</RouterLink>
+      <RouterLink
+        to="/coletas"
+        :class="{ active: route.path.startsWith('/coletas') }"
+      ><Truck
+        :size="18"
+        aria-hidden="true"
+      />Coletas</RouterLink>
     </nav>
     <main
       id="conteudo"

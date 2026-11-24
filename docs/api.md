@@ -1,6 +1,6 @@
 # Contrato planejado da API
 
-Contrato para orientar a implementação e a integração. Autenticação e clientes estão implementados; coletas e painel permanecem planejados. Manter os mesmos nomes no front-end, nos DTOs e no Swagger.
+Contrato para orientar a implementação e a integração. Autenticação, clientes e coletas estão implementados; painel permanece planejado. Manter os mesmos nomes no front-end, nos DTOs e no Swagger.
 
 ## Convenções
 
@@ -64,6 +64,7 @@ As respostas de listagem e detalhe de cliente incluem `possuiColetas`, booleano 
 | --- | --- |
 | `GET /coletas` | Lista com os filtros abaixo |
 | `POST /coletas` | Cria coleta agendada |
+| `GET /coletas/residuos?busca=` | Até 20 sugestões distintas de resíduos, ordenadas; busca parcial literal |
 | `GET /coletas/:id` | Detalhe com identificação pública do cliente |
 | `PATCH /coletas/:id` | Edita somente campos permitidos para o estado atual |
 | `DELETE /coletas/:id` | Exclui somente agendada; retorna 204 |
@@ -77,9 +78,13 @@ Filtros combináveis: `clienteId`, `status`, `tipoResiduo`, `inicio`, `fim` e `s
 
 `inicio` e `fim` filtram a data agendada. Datas inválidas ou intervalo invertido retornam 400. Parâmetros ausentes não aplicam aquele limite.
 
+Coletas retornam os campos públicos do registro e `cliente` com identificação pública. Valores monetários são strings de até 12 dígitos inteiros e 2 casas; peso tem até 11 inteiros e 3 casas, maior que zero. Não aceitar expoentes, símbolos, agrupamento de milhar nem números JSON. Datas civis aceitam anos de 1000 a 9999 e validam o calendário. Campos opcionais omitidos recebem os padrões; nulos são rejeitados. Observação pode ser limpa com string vazia. Cancelamento recebe corpo vazio ou `{}` e rejeita campos.
+
+`GET /coletas/residuos` é autenticado; `busca` tem até 160 caracteres. Retorna `{ itens: string[], limite: 20 }`. A interface oferece essas sugestões sem impedir novos tipos.
+
 ### Paginação
 
-Todas as listas usam `pagina` a partir de 1, padrão 1, e `limite` de 1 a 100, padrão 20. Clientes aceitam até a página 100000. Resposta: `itens` e `meta` com `pagina`, `limite`, `total` e `totalPaginas`. Em lista vazia, total e total de páginas são zero. Uma página além do resultado devolve itens vazios, preservando a contagem real dos filtros.
+Todas as listas usam `pagina` a partir de 1, padrão 1, e `limite` de 1 a 100, padrão 20. Clientes e coletas aceitam até a página 100000. Resposta: `itens` e `meta` com `pagina`, `limite`, `total` e `totalPaginas`. Em lista vazia, total e total de páginas são zero. Uma página além do resultado devolve itens vazios, preservando a contagem real dos filtros.
 
 Ordenação estável: clientes por nome e ID; coletas por data agendada decrescente e ID. Filtros são aplicados antes da contagem e da paginação.
 

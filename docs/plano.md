@@ -15,7 +15,7 @@ Construir uma entrega funcional e consistente dentro de 72 horas, com prioridade
 | 7. Acabamento | Responsividade, teclado, mensagens e revisão de todas as telas | Fluxos revisados em 390, 768 e 1440 px, sem sobreposição; gráficos e tabelas legíveis; carregamento, erro e vazio conferidos |
 | 8. Entrega | CI, README, ambiente limpo e revisão final | Instalação reproduzida do zero; lint, tipos, build e testes passam; commits legíveis; repositório público verificado; checklist final preenchido |
 
-As partes 1 a 4 estão implementadas e com validação técnica concluída. Clientes passaram por oito cenários de integração com PostgreSQL e conferência dos fluxos no Chrome em desktop e tablet. A inspeção móvel de clientes ficou pendente por indisponibilidade do controle da janela e será retomada na parte 7. Coletas e indicadores ainda serão implementados.
+As partes 1 a 5 estão implementadas e com validação técnica concluída. Clientes passaram por oito cenários de integração com PostgreSQL e conferência dos fluxos no Chrome em desktop e tablet. A inspeção móvel de clientes ficou pendente por indisponibilidade do controle da janela e será retomada na parte 7. Coletas passaram por dez cenários de integração com PostgreSQL, incluindo concorrência, precisão, filtros e CDF. Cadastro, realização e registro de CDF foram conferidos no Chrome em desktop; a revisão em 390 e 768 px permanece na parte 7. Indicadores serão implementados a seguir.
 
 ## Distribuição do prazo
 
@@ -30,10 +30,10 @@ Se houver atraso, retirar diferenciais de menor prioridade antes de reduzir os o
 ### API
 
 - [x] Cadastro e login JWT; guard global para endpoints atuais e futuros.
-- [ ] CRUD de clientes e coletas com vínculo obrigatório entre eles.
+- [x] CRUD de clientes e coletas com vínculo obrigatório entre eles.
 - [x] Parcela de clientes: CRUD, paginação, busca, situação, CNPJ único e exclusão impedida quando há coletas.
-- [ ] Transições e registro de CDF com validações na API.
-- [ ] Paginação e filtros combináveis por cliente, status, resíduo, período e sem CDF.
+- [x] Transições e registro de CDF com validações na API.
+- [x] Paginação e filtros combináveis por cliente, status, resíduo, período e sem CDF.
 - [ ] `GET /painel?inicio=&fim=` com agregações feitas no banco.
 - [ ] Respostas 400, 401, 404 e 409 conforme o contrato.
 - [x] Migrations versionadas e `.env.example` sem segredos reais.
@@ -41,10 +41,10 @@ Se houver atraso, retirar diferenciais de menor prioridade antes de reduzir os o
 ### Interface
 
 - [x] Login e retorno ao login quando a sessão não for válida, com testes de lógica e conferência no Chrome.
-- [ ] Listas e formulários de clientes e coletas.
+- [x] Listas e formulários de clientes e coletas.
 - [x] Parcela de clientes: lista, filtros na URL, formulário, edição e ações de situação, com confirmação e proteção de alterações não salvas.
-- [ ] Filtros e paginação utilizando a API.
-- [ ] Ações de realizar, cancelar e registrar CDF.
+- [x] Filtros e paginação utilizando a API.
+- [x] Ações de realizar, cancelar e registrar CDF.
 - [ ] Painel como página inicial após o login.
 - [ ] Todos os sete blocos do painel, incluindo quatro cartões de indicador.
 - [ ] Carregamento, erro e lista vazia visíveis.
