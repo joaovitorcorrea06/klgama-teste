@@ -15,7 +15,7 @@ Construir uma entrega funcional e consistente dentro de 72 horas, com prioridade
 | 7. Acabamento | Responsividade, teclado, mensagens e revisão de todas as telas | Fluxos revisados em 390, 768 e 1440 px, sem sobreposição; gráficos e tabelas legíveis; carregamento, erro e vazio conferidos |
 | 8. Entrega | CI, README, ambiente limpo e revisão final | Instalação reproduzida do zero; lint, tipos, build e testes passam; commits legíveis; repositório público verificado; checklist final preenchido |
 
-As oito partes estão implementadas. A validação local inclui lint, tipos, build, 5 testes de configuração, 14 testes do front-end e 45 verificações de integração com PostgreSQL real, incluindo agrupadores. A instalação foi reproduzida em pasta e volume novos; o fluxo HTTP completo e o Swagger protegido foram conferidos pelo proxy. A revisão no Chrome cobriu 390, 768 e 1440 px, teclado, erros, estado vazio e recuperação da API. O repositório público está em [joaovitorcorrea06/klgama-teste](https://github.com/joaovitorcorrea06/klgama-teste); o resultado atualizado da CI fica na aba Actions.
+As oito partes estão implementadas. A validação local inclui lint, tipos, build, 5 testes de configuração, 14 testes do front-end e 47 verificações de integração com PostgreSQL real, incluindo agrupadores. A instalação foi reproduzida em pasta e volume novos; o fluxo HTTP completo e o Swagger protegido foram conferidos pelo proxy. A revisão no Chrome cobriu 390, 768 e 1440 px, teclado, erros, estado vazio e recuperação da API. O repositório público está em [joaovitorcorrea06/klgama-teste](https://github.com/joaovitorcorrea06/klgama-teste); o resultado atualizado da CI fica na aba Actions.
 
 ## Distribuição do prazo
 

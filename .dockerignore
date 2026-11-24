@@ -9,3 +9,6 @@ node_modules
 coverage
 tmp
 *.log
+
+.playwright-cli
+output/playwright

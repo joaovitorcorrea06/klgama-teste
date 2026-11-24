@@ -199,11 +199,16 @@ onBeforeUnmount(() => { revision++; controller?.abort(); });
         </section>
         <section class="data-card kpi-card">
           <div class="kpi-label">
-            <span>Sem CDF</span><CircleAlert
+            <span>Sem CDF</span><span
+              v-if="result.indicadores.semCdf > 0"
+              class="kpi-attention-badge"
+            >Atenção</span><CircleAlert
               :size="20"
               aria-hidden="true"
             />
-          </div><strong class="kpi-value numeric">{{ formatFixed(String(result.indicadores.semCdf), 0) }}</strong><p><span class="numeric">{{ formatFixed(result.indicadores.percentualSemCdf, 1) }}%</span> dos MTR do período</p><span class="kpi-pending-label">Inclui coletas agendadas</span>
+          </div><strong class="kpi-value numeric">{{ formatFixed(String(result.indicadores.semCdf), 0) }}</strong><div class="kpi-progress kpi-progress-pending">
+            <span :style="{ width: `${Math.min(100, Number(result.indicadores.percentualSemCdf))}%` }" />
+          </div><p><span class="numeric">{{ formatFixed(result.indicadores.percentualSemCdf, 1) }}%</span> dos MTR do período</p><span class="kpi-pending-label">Inclui coletas agendadas</span>
         </section>
         <section class="data-card kpi-card">
           <div class="kpi-label">
@@ -229,7 +234,10 @@ onBeforeUnmount(() => { revision++; controller?.abort(); });
               </h2><p>Movimento mensal pela data de realização</p>
             </div><span class="panel-period">{{ result.periodo.meses }} meses</span>
           </div><div class="finance-total">
-            <span>Receita <strong class="numeric">R$ {{ formatFixed(result.indicadores.receita) }}</strong></span><span>Despesa <strong class="numeric">R$ {{ formatFixed(result.indicadores.despesa) }}</strong></span>
+            <span>Saldo acumulado <strong
+              class="numeric"
+              :class="Number(result.indicadores.saldo) < 0 ? 'amount-negative' : 'amount-positive'"
+            >R$ {{ formatFixed(result.indicadores.saldo) }}</strong></span><span>Receita <strong class="numeric">R$ {{ formatFixed(result.indicadores.receita) }}</strong></span><span>Despesa <strong class="numeric">R$ {{ formatFixed(result.indicadores.despesa) }}</strong></span>
           </div><DashboardChart
             title="Receita e despesa por mês"
             :months="months"

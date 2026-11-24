@@ -1,29 +1,33 @@
-import type { INestApplication } from '@nestjs/common';
+import { UnauthorizedException, type INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import type { NextFunction, Request, Response } from 'express';
-import { createHash, timingSafeEqual } from 'node:crypto';
 import { readEnvironment } from '../config/environment';
+import { AuthService } from '../auth/auth.service';
+import { SESSION_COOKIE } from '../auth/auth.types';
 import { API_SCHEMAS } from './api-schemas';
 
 export function configureDocumentation(app: INestApplication): void {
   const { swagger } = readEnvironment();
   if (!swagger.enabled) return;
-  const expected = createHash('sha256').update(`${swagger.user}:${swagger.password}`).digest();
-  // Swagger é middleware, fora do guard global do Nest. Proteger antes do setup
-  // cobre a página, os recursos estáticos e a especificação sob o mesmo prefixo.
-  app.use('/docs', (request: Request, response: Response, next: NextFunction) => {
+  const auth = app.get(AuthService);
+  // Swagger é middleware, fora do guard global do Nest. A mesma validação de JWT
+  // protege página, recursos e contrato antes de o Swagger registrar suas rotas.
+  app.use('/docs', async (request: Request, response: Response, next: NextFunction) => {
     response.setHeader('Cache-Control', 'no-store');
-    const encoded = /^Basic ([A-Za-z0-9+/]+=*)$/i.exec(request.headers.authorization ?? '')?.[1];
-    const supplied = createHash('sha256').update(encoded ? Buffer.from(encoded, 'base64') : '').digest();
-    if (!encoded || !timingSafeEqual(expected, supplied)) {
-      response.setHeader('WWW-Authenticate', 'Basic realm="EcoColeta API docs", charset="UTF-8"');
-      response.status(401).json({ statusCode: 401, code: 'NAO_AUTENTICADO', message: 'A documentação exige suas credenciais próprias de acesso.' });
-      return;
+    try {
+      const authorization = request.headers.authorization;
+      const bearer = authorization?.match(/^Bearer ([^\s]+)$/i)?.[1];
+      const token: unknown = authorization ? bearer : request.cookies?.[SESSION_COOKIE];
+      if (typeof token !== 'string' || !token) throw new UnauthorizedException('Entre no portal antes de abrir a documentação.');
+      await auth.validarToken(token);
+      next();
+    } catch (error) {
+      if (error instanceof UnauthorizedException) response.status(401).json({ statusCode: 401, code: 'NAO_AUTENTICADO', message: error.message });
+      else next(error);
     }
-    next();
   });
   const config = new DocumentBuilder().setTitle('EcoColeta · API').setVersion('1.0.0')
-    .setDescription('Operação inteiramente fictícia. Decimais são strings; datas civis usam YYYY-MM-DD. As regras de negócio são validadas pela API. Para testar pelo navegador, abra a documentação pelo proxy /api/docs, faça login e informe o accessToken em Authorize. A senha Basic protege somente a documentação.')
+    .setDescription('Operação inteiramente fictícia. Decimais são strings; datas civis usam YYYY-MM-DD. As regras de negócio são validadas pela API. Para testar pelo navegador, entre no portal, abra a documentação pelo proxy /api/docs e informe o accessToken em Authorize. A documentação exige JWT válido em cookie HttpOnly ou Bearer, como as rotas de negócio.')
     .addServer('/api', 'Proxy do portal (recomendado)')
     .addServer('/', 'API direta, sem proxy')
     .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' }, 'bearer')

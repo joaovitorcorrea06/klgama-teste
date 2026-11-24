@@ -9,7 +9,7 @@ export interface Environment {
   apiPort: number;
   webOrigin: string;
   trustProxy: boolean;
-  swagger: { enabled: boolean; user: string; password: string };
+  swagger: { enabled: boolean };
   auth: { secret: string; expiresIn: number; cookieSecure: boolean };
   database: {
     host: string;
@@ -63,18 +63,13 @@ export function readEnvironment(source: NodeJS.ProcessEnv = process.env): Enviro
   if (origin.protocol === 'https:' && cookieSecure !== 'true') throw new Error('COOKIE_SECURE deve ser true quando WEB_ORIGIN usa HTTPS.');
   const swaggerEnabled = source.SWAGGER_ENABLED ?? 'false';
   if (!['true', 'false'].includes(swaggerEnabled)) throw new Error('SWAGGER_ENABLED deve ser true ou false.');
-  const swaggerUser = source.SWAGGER_USER?.trim() ?? '';
-  const swaggerPassword = source.SWAGGER_PASSWORD ?? '';
-  if (swaggerEnabled === 'true' && (!/^[a-zA-Z0-9_-]{3,80}$/.test(swaggerUser) || Buffer.byteLength(swaggerPassword) < 16 || swaggerPassword.startsWith('replace-'))) {
-    throw new Error('Swagger habilitado exige SWAGGER_USER válido e SWAGGER_PASSWORD próprio com pelo menos 16 bytes. Execute npm run setup após habilitar.');
-  }
 
   return {
     nodeEnv,
     apiPort: port('API_PORT', '3000'),
     webOrigin,
     trustProxy: trustProxy === 'true',
-    swagger: { enabled: swaggerEnabled === 'true', user: swaggerUser, password: swaggerPassword },
+    swagger: { enabled: swaggerEnabled === 'true' },
     auth: { secret, expiresIn, cookieSecure: cookieSecure === 'true' },
     database: {
       host: required('DB_HOST'),

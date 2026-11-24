@@ -1,20 +1,20 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, ref, useId, watch } from 'vue';
-import { BarController, BarElement, CategoryScale, Chart, Filler, LinearScale, LineController, LineElement, PointElement, Tooltip, type Plugin } from 'chart.js';
+import { BarController, BarElement, CategoryScale, Chart, LinearScale, Tooltip, type Plugin } from 'chart.js';
 import { formatFixed, formatMonth } from '../services/painel';
 
-Chart.register(BarController, BarElement, CategoryScale, LinearScale, LineController, LineElement, PointElement, Filler, Tooltip);
-const props = withDefaults(defineProps<{ title: string; months: string[]; series: { label: string; color: string; values: (string | number)[] }[]; kind?: 'bar' | 'line'; stacked?: boolean; unit?: string; scale?: number }>(), { kind: 'bar', stacked: false, unit: '', scale: 2 });
+Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip);
+const props = withDefaults(defineProps<{ title: string; months: string[]; series: { label: string; color: string; values: (string | number)[] }[]; stacked?: boolean; unit?: string; scale?: number }>(), { stacked: false, unit: '', scale: 2 });
 const canvas = ref<HTMLCanvasElement>();
 const id = useId();
-let chart: Chart<'bar' | 'line'> | undefined;
+let chart: Chart<'bar'> | undefined;
 function render(): void {
   if (!canvas.value) return;
   chart?.destroy();
-  const labels: Plugin<'bar' | 'line'> = {
+  const labels: Plugin<'bar'> = {
     id: 'compactBarValues',
     afterDatasetsDraw(instance) {
-      if (props.kind !== 'bar' || props.stacked || instance.width < 640 || props.months.length > 12) return;
+      if (props.stacked) return;
       const { ctx } = instance;
       ctx.save(); ctx.font = '10px Roboto'; ctx.fillStyle = '#606473'; ctx.textAlign = 'center';
       instance.data.datasets.forEach((dataset, datasetIndex) => {
@@ -30,8 +30,8 @@ function render(): void {
   };
   chart = new Chart(canvas.value, {
     plugins: [labels],
-    type: props.kind,
-    data: { labels: props.months.map(m => formatMonth(m)), datasets: props.series.map(s => ({ label: s.label, data: s.values.map(Number), backgroundColor: props.kind === 'line' ? `${s.color}12` : s.color, borderColor: s.color, borderWidth: props.kind === 'line' ? 2.5 : 0, borderRadius: props.stacked ? 0 : 3, maxBarThickness: 24, tension: 0.25, pointRadius: 3, pointHoverRadius: 5, fill: props.kind === 'line' })) },
+    type: 'bar',
+    data: { labels: props.months.map(m => formatMonth(m)), datasets: props.series.map(s => ({ label: s.label, data: s.values.map(Number), backgroundColor: s.color, borderColor: s.color, borderWidth: 0, borderRadius: props.stacked ? 0 : 3, maxBarThickness: 24 })) },
     options: {
       responsive: true, maintainAspectRatio: false, animation: false, layout: { padding: { top: 18 } },
       interaction: { mode: 'index', intersect: false },
@@ -44,7 +44,7 @@ function render(): void {
   });
 }
 onMounted(render);
-watch(() => [props.months, props.series, props.kind, props.stacked, props.unit, props.scale], () => void nextTick(render), { deep: true });
+watch(() => [props.months, props.series, props.stacked, props.unit, props.scale], () => void nextTick(render), { deep: true });
 onBeforeUnmount(() => chart?.destroy());
 </script>
 
@@ -64,13 +64,23 @@ onBeforeUnmount(() => chart?.destroy());
         />{{ serie.label }}{{ unit ? ` (${unit})` : '' }}
       </li>
     </ul>
-    <div class="chart-canvas">
-      <canvas
-        ref="canvas"
-        role="img"
-        :aria-label="`${title}. Valores detalhados disponíveis na tabela abaixo.`"
-        :aria-describedby="`${id}-table-hint`"
-      />
+    <div
+      class="chart-plot"
+      role="region"
+      tabindex="0"
+      :aria-label="`${title}. Gráfico com rolagem horizontal quando necessário.`"
+    >
+      <div
+        class="chart-canvas"
+        :style="{ minWidth: `${Math.max(280, months.length * (stacked ? 32 : series.length * 32))}px` }"
+      >
+        <canvas
+          ref="canvas"
+          role="img"
+          :aria-label="`${title}. Valores detalhados disponíveis na tabela abaixo.`"
+          :aria-describedby="`${id}-table-hint`"
+        />
+      </div>
     </div>
     <details class="chart-data">
       <summary :id="`${id}-table-hint`">

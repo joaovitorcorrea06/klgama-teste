@@ -1,9 +1,7 @@
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { JwtService } from '@nestjs/jwt';
-import { isUUID } from 'class-validator';
 import { readEnvironment } from '../config/environment';
-import { UsuariosService } from '../usuarios/usuarios.service';
+import { AuthService } from './auth.service';
 import { AuthenticatedRequest, SESSION_COOKIE } from './auth.types';
 import { PUBLIC_ROUTE } from './public.decorator';
 
@@ -11,7 +9,7 @@ import { PUBLIC_ROUTE } from './public.decorator';
 export class AuthGuard implements CanActivate {
   private readonly environment = readEnvironment();
 
-  constructor(private readonly reflector: Reflector, private readonly jwt: JwtService, private readonly usuarios: UsuariosService) {}
+  constructor(private readonly reflector: Reflector, private readonly auth: AuthService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
@@ -32,19 +30,9 @@ export class AuthGuard implements CanActivate {
       throw new ForbiddenException('Acesse esta ação pelo portal.');
     }
 
-    let payload: { sub?: unknown; exp?: unknown };
-    try {
-      payload = await this.jwt.verifyAsync<{ sub?: unknown; exp?: unknown }>(token);
-    } catch {
-      throw new UnauthorizedException('Sua sessão expirou ou não é válida. Entre novamente.');
-    }
-    if (typeof payload.sub !== 'string' || !isUUID(payload.sub, '4') || typeof payload.exp !== 'number' || !Number.isFinite(payload.exp)) {
-      throw new UnauthorizedException('Sua sessão não é válida. Entre novamente.');
-    }
-    const usuario = await this.usuarios.buscarPorId(payload.sub);
-    if (!usuario) throw new UnauthorizedException('Sua sessão não é válida. Entre novamente.');
-    request.usuario = usuario;
-    request.expiraEm = payload.exp;
+    const session = await this.auth.validarToken(token);
+    request.usuario = session.usuario;
+    request.expiraEm = session.expiraEm;
     return true;
   }
 }
