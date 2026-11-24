@@ -55,7 +55,7 @@ Se houver atraso, retirar diferenciais de menor prioridade antes de reduzir os o
 - [x] Dados inteiramente fictícios.
 - [x] Repositório público com histórico de commits por entrega concluída.
 - [x] README com instalação, configuração e execução verificadas em pasta limpa.
-- [x] README com decisões, requisitos entregues e estimativa de esforço para um pleno, identificada como estimativa.
+- [x] README com decisões, requisitos entregues e tempo aproximado de dedicação informado pelo candidato.
 - [x] Nenhuma senha real, token, `.env` ou arquivo de CDF real versionado.
 - [ ] Resposta ao e-mail com o link do repositório feita pelo candidato dentro do prazo.
 

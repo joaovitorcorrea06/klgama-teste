@@ -1,6 +1,6 @@
 # Validação dos requisitos do desafio
 
-Auditoria em 24/11/2026, baseada nas seis páginas do enunciado fornecido pelo candidato. Os requisitos funcionais obrigatórios foram conferidos por código, testes HTTP com PostgreSQL e navegação real. As divergências de apresentação encontradas foram corrigidas. A ressalva de entrega é o tempo dedicado: o README informa uma estimativa solicitada pelo candidato, e não horas cronometradas.
+Auditoria em 24/11/2026, baseada nas seis páginas do enunciado fornecido pelo candidato. Os requisitos funcionais obrigatórios foram conferidos por código, testes HTTP com PostgreSQL e navegação real. As divergências de apresentação encontradas foram corrigidas.
 
 O envio do e-mail pertence ao candidato. Nenhum e-mail foi enviado nesta validação. O horário exato de recebimento e, portanto, o vencimento das 72 horas não foram verificados em uma caixa de e-mail.
 
@@ -123,7 +123,7 @@ Capturas locais da auditoria estão em `output/playwright/`, excluídas do Git e
 - Repositório público com histórico: conferido sem login.
 - Instalação, configuração e execução: verificadas em ambiente limpo e descritas no README.
 - Escopo e suposições: documentados; diferenciais não implementados identificados acima.
-- Tempo dedicado: confirmar com o candidato. A estimativa de 32 horas para um pleno não substitui uma medição pessoal de dedicação.
+- Tempo aproximado de dedicação informado pelo candidato: 12 horas.
 - Deploy e usuário: sem deploy público; conta fictícia local documentada.
 - Prazo de 72 horas e envio: responsabilidade do candidato; nenhum e-mail enviado.
 
