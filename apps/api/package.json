@@ -8,8 +8,9 @@
     "start": "node dist/main.js",
     "typecheck": "tsc --noEmit",
     "test": "node --test -r ts-node/register test/config.spec.ts",
-    "test:db": "node --test -r ts-node/register test/database.integration.ts test/auth.integration.ts test/clientes.integration.ts test/coletas.integration.ts",
+    "test:db": "node --test -r ts-node/register test/database.integration.ts test/auth.integration.ts test/clientes.integration.ts test/coletas.integration.ts test/painel.integration.ts",
     "db:check": "ts-node src/database/check.ts",
+    "db:seed": "ts-node src/database/seed.ts",
     "db:migrate": "typeorm-ts-node-commonjs migration:run -d src/database/data-source.ts",
     "db:revert": "typeorm-ts-node-commonjs migration:revert -d src/database/data-source.ts",
     "db:migrate:prod": "typeorm migration:run -d dist/database/data-source.js"

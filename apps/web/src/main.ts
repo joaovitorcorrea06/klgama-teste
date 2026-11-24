@@ -7,6 +7,7 @@ import './styles/global.css';
 import './styles/auth.css';
 import './styles/clientes.css';
 import './styles/coletas.css';
+import './styles/painel.css';
 import App from './App.vue';
 import { router } from './router';
 

@@ -73,7 +73,7 @@ Conferir as telas em 390, 768 e 1440 px, com dados vazios, poucos itens, muitos 
 2. Apresentar pendências individuais com MTR, cliente e data, além da quantidade. Isso torna o painel útil para agir sobre o problema.
 3. Oferecer descrição e alternativa tabular acessível para os gráficos, com estados vazios informativos. Isso amplia o acesso e permite conferir os números exatos.
 
-Estas melhorias são intenções de implementação; o README final indicará quais foram efetivamente entregues.
+As três melhorias estão implementadas no painel; evidências e limitações da revisão estão no README.
 
 ## Revisão das telas de acesso
 
@@ -82,3 +82,7 @@ Login e cadastro conferidos no Chrome em 390/393 px, 768 px e 1440 px. O formul�
 ## Revisão da gestão de clientes
 
 Listagem revisada no Chrome em desktop e 768 px, incluindo busca vazia, limpeza de filtros, situação, identificação de histórico e restrição de exclusão. Cadastro e edição conferidos com validação, máscara de CNPJ, foco no erro, salvamento e cancelamento de navegação mantendo os dados. A revisão móvel está pendente após indisponibilidade do controle da janela do navegador. A tabela mantém colunas legíveis em uma região com rolagem horizontal; filtros e ações se reorganizam em larguras estreitas.
+
+## Revisão de coletas e painel
+
+Coletas conferidas no Chrome em desktop: listagem por situação, novo agendamento com cliente, peso/data obrigatórios na realização, mudança de situação e registro de CDF. Painel inspecionado em desktop com dados fictícios: quatro cartões, financeiro com valores compactos acima das barras, atenção atual, rastreabilidade empilhada, ranking, evolução e alternativa tabular. Troca de métrica mantém a posição da página. Revisão consolidada em 390/768/1440 px, teclado e estados de erro/vazio permanece na parte 7. Controles nativos de mês/data seguem a localização do navegador/sistema; rótulos e contexto do portal são em português.

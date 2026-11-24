@@ -5,10 +5,11 @@ import { databaseOptions } from './database/options';
 import { AuthModule } from './auth/auth.module';
 import { ClientesModule } from './clientes/clientes.module';
 import { ColetasModule } from './coletas/coletas.module';
+import { PainelModule } from './painel/painel.module';
 
 @Module({
   imports: [TypeOrmModule.forRootAsync({
     useFactory: () => ({ ...databaseOptions(readEnvironment()), retryAttempts: 3, retryDelay: 1000 }),
-  }), AuthModule, ClientesModule, ColetasModule],
+  }), AuthModule, ClientesModule, ColetasModule, PainelModule],
 })
 export class AppModule {}

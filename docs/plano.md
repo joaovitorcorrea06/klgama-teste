@@ -15,7 +15,7 @@ Construir uma entrega funcional e consistente dentro de 72 horas, com prioridade
 | 7. Acabamento | Responsividade, teclado, mensagens e revisão de todas as telas | Fluxos revisados em 390, 768 e 1440 px, sem sobreposição; gráficos e tabelas legíveis; carregamento, erro e vazio conferidos |
 | 8. Entrega | CI, README, ambiente limpo e revisão final | Instalação reproduzida do zero; lint, tipos, build e testes passam; commits legíveis; repositório público verificado; checklist final preenchido |
 
-As partes 1 a 5 estão implementadas e com validação técnica concluída. Clientes passaram por oito cenários de integração com PostgreSQL e conferência dos fluxos no Chrome em desktop e tablet. A inspeção móvel de clientes ficou pendente por indisponibilidade do controle da janela e será retomada na parte 7. Coletas passaram por dez cenários de integração com PostgreSQL, incluindo concorrência, precisão, filtros e CDF. Cadastro, realização e registro de CDF foram conferidos no Chrome em desktop; a revisão em 390 e 768 px permanece na parte 7. Indicadores serão implementados a seguir.
+As partes 1 a 6 estão implementadas e com validação técnica concluída. Clientes passaram por oito cenários de integração com PostgreSQL e conferência dos fluxos no Chrome em desktop e tablet. A inspeção móvel de clientes ficou pendente por indisponibilidade do controle da janela e será retomada na parte 7. Coletas passaram por dez cenários de integração com PostgreSQL, incluindo concorrência, precisão, filtros e CDF. Cadastro, realização e registro de CDF foram conferidos no Chrome em desktop; a revisão em 390 e 768 px permanece na parte 7. Painel integrado, com agregações SQL, meses zerados, bases temporais distintas, atenção global e demonstração idempotente de 12 meses. A suíte PostgreSQL tem 40 verificações aprovadas, incluindo agrupadores. Cartões, gráficos, tabela e troca de métrica conferidos no Chrome em desktop; revisão responsiva completa permanece na parte 7.
 
 ## Distribuição do prazo
 
@@ -34,8 +34,8 @@ Se houver atraso, retirar diferenciais de menor prioridade antes de reduzir os o
 - [x] Parcela de clientes: CRUD, paginação, busca, situação, CNPJ único e exclusão impedida quando há coletas.
 - [x] Transições e registro de CDF com validações na API.
 - [x] Paginação e filtros combináveis por cliente, status, resíduo, período e sem CDF.
-- [ ] `GET /painel?inicio=&fim=` com agregações feitas no banco.
-- [ ] Respostas 400, 401, 404 e 409 conforme o contrato.
+- [x] `GET /painel?inicio=&fim=` com agregações feitas no banco.
+- [x] Respostas 400, 401, 404 e 409 conforme o contrato.
 - [x] Migrations versionadas e `.env.example` sem segredos reais.
 
 ### Interface
@@ -45,14 +45,14 @@ Se houver atraso, retirar diferenciais de menor prioridade antes de reduzir os o
 - [x] Parcela de clientes: lista, filtros na URL, formulário, edição e ações de situação, com confirmação e proteção de alterações não salvas.
 - [x] Filtros e paginação utilizando a API.
 - [x] Ações de realizar, cancelar e registrar CDF.
-- [ ] Painel como página inicial após o login.
-- [ ] Todos os sete blocos do painel, incluindo quatro cartões de indicador.
-- [ ] Carregamento, erro e lista vazia visíveis.
-- [ ] Identidade visual e números em português brasileiro.
+- [x] Painel como página inicial após o login.
+- [x] Todos os sete blocos do painel, incluindo quatro cartões de indicador.
+- [x] Carregamento, erro e lista vazia visíveis.
+- [x] Identidade visual e números em português brasileiro.
 
 ### Entrega
 
-- [ ] Dados inteiramente fictícios.
+- [x] Dados inteiramente fictícios.
 - [ ] Repositório público com histórico de commits por entrega concluída.
 - [ ] README com instalação, configuração e execução verificadas em pasta limpa.
 - [ ] README com decisões, requisitos entregues e tempo aproximado dedicado.

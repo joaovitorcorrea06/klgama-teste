@@ -1,6 +1,6 @@
-# Contrato planejado da API
+# Contrato da API
 
-Contrato para orientar a implementação e a integração. Autenticação, clientes e coletas estão implementados; painel permanece planejado. Manter os mesmos nomes no front-end, nos DTOs e no Swagger.
+Contrato para orientar a implementação e a integração. Autenticação, clientes, coletas e painel estão implementados. Manter os mesmos nomes no front-end, nos DTOs e no Swagger.
 
 ## Convenções
 
@@ -92,10 +92,12 @@ Ordenação estável: clientes por nome e ID; coletas por data agendada decresce
 
 `GET /painel?inicio=2026-01&fim=2026-12`
 
+Meses inclusivos, de 1 a 60 por consulta. Sem parâmetros, últimos 12 meses incluindo o atual de São Paulo. Com apenas `fim`, início retrocede 11 meses; com apenas `inicio`, fim é o mês atual. Meses inválidos, período invertido, extensão maior que 60 meses e parâmetros desconhecidos retornam 400.
+
 | Campo da resposta | Conteúdo |
 | --- | --- |
 | `periodo` | Meses inicial e final e quantidade de meses |
-| `indicadores` | Emitidos, média mensal, com e sem CDF e percentuais, receita, despesa, saldo e toneladas |
+| `indicadores` | `emitidos`, `mediaMensalMtr`, `comCdf`, `semCdf`, `percentualComCdf`, `percentualSemCdf`, `receita`, `despesa`, `saldo`, `toneladas` |
 | `financeiroMensal` | Mês, receita, despesa e saldo |
 | `rastreabilidadeMensal` | Mês, com CDF e sem CDF |
 | `composicaoResiduos` | Tipo, toneladas e percentual do total, em ranking |

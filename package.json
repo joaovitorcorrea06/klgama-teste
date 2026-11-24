@@ -22,6 +22,7 @@
     "check": "npm run lint && npm run typecheck && npm test && npm run build",
     "db:up": "docker compose up -d --wait db",
     "db:check": "npm run db:check -w @ecocoleta/api",
+    "db:seed": "npm run db:seed -w @ecocoleta/api",
     "db:migrate": "npm run db:migrate -w @ecocoleta/api",
     "db:revert": "npm run db:revert -w @ecocoleta/api"
   },

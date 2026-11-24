@@ -23,7 +23,7 @@ test('migration cria, protege e reverte o esquema em banco isolado', async () =>
     await admin.query(`CREATE DATABASE "${database}"`);
     created = true;
     await source.initialize();
-    assert.equal((await source.runMigrations()).length, 1);
+    assert.equal((await source.runMigrations()).length, 2);
     assert.equal((await source.runMigrations()).length, 0);
     const [cliente] = await source.query("INSERT INTO clientes (nome, cnpj, cidade, uf) VALUES ('Cliente Fictício', '00000000000000', 'Cidade Fictícia', 'SP') RETURNING id") as { id: string }[];
     const [coleta] = await source.query("INSERT INTO coletas (cliente_id, numero_mtr, tipo_residuo, data_agendada) VALUES ($1, 'MTR-TESTE', 'Resíduo fictício', '2026-01-10') RETURNING id, status, peso_kg, data_cdf", [cliente.id]) as { id: string; status: string; peso_kg: string | null; data_cdf: string | null }[];
@@ -46,9 +46,12 @@ test('migration cria, protege e reverte o esquema em banco isolado', async () =>
     const [saldo] = await source.query('SELECT (valor_receita - valor_despesa)::text AS valor FROM coletas WHERE id = $1', [coleta.id]) as { valor: string }[];
     assert.equal(saldo.valor, '-0.10');
     await source.undoLastMigration();
+    const [index] = await source.query("SELECT to_regclass('public.coletas_atencao_idx') AS indice") as { indice: string | null }[];
+    assert.equal(index.indice, null);
+    await source.undoLastMigration();
     const [result] = await source.query("SELECT to_regclass('public.coletas') AS tabela") as { tabela: string | null }[];
     assert.equal(result.tabela, null);
-    assert.equal((await source.runMigrations()).length, 1);
+    assert.equal((await source.runMigrations()).length, 2);
   } finally {
     if (source.isInitialized) await source.destroy();
     if (created) await admin.query(`DROP DATABASE "${database}"`);
